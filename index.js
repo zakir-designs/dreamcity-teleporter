@@ -190,14 +190,20 @@ const FALLBACK_RATES_USD = {
 let cachedRates = null;
 let lastFetchedAt = 0;
 
-async function getLiveRates() {
+async function getLiveRates(forceRefresh = false) {
   const now = Date.now();
-  if (cachedRates && now - lastFetchedAt < 30 * 60 * 1000) return cachedRates;
+  const expiredBySchedule = cachedRates?.nextUpdateMs && now >= cachedRates.nextUpdateMs;
+  if (!forceRefresh && cachedRates && !expiredBySchedule && now - lastFetchedAt < 10 * 60 * 1000) {
+    return cachedRates;
+  }
 
   try {
     const controller = new AbortController();
     const t = setTimeout(() => controller.abort(), 4500);
-    const resp = await fetch('https://open.er-api.com/v6/latest/USD', { signal: controller.signal });
+    const resp = await fetch('https://open.er-api.com/v6/latest/USD', {
+      signal: controller.signal,
+      cache: 'no-store'
+    });
     clearTimeout(t);
     if (resp.ok) {
       const data = await resp.json();
@@ -206,6 +212,8 @@ async function getLiveRates() {
           base: 'USD',
           source: 'Live Global ExchangeRate Open API',
           updatedAt: data.time_last_update_utc || new Date().toUTCString(),
+          checkedAt: new Date().toISOString(),
+          nextUpdateMs: data.time_next_update_unix ? data.time_next_update_unix * 1000 : now + 10 * 60 * 1000,
           isLive: true,
           rates: data.rates
         };
@@ -218,7 +226,10 @@ async function getLiveRates() {
   try {
     const controller = new AbortController();
     const t = setTimeout(() => controller.abort(), 4500);
-    const resp = await fetch('https://api.frankfurter.dev/v2/rates?base=USD', { signal: controller.signal });
+    const resp = await fetch('https://api.frankfurter.dev/v2/rates?base=USD', {
+      signal: controller.signal,
+      cache: 'no-store'
+    });
     clearTimeout(t);
     if (resp.ok) {
       const list = await resp.json();
@@ -234,6 +245,8 @@ async function getLiveRates() {
             base: 'USD',
             source: 'Live Frankfurter Central Bank API',
             updatedAt: list[0].date || new Date().toISOString().slice(0, 10),
+            checkedAt: new Date().toISOString(),
+            nextUpdateMs: now + 10 * 60 * 1000,
             isLive: true,
             rates: { ...FALLBACK_RATES_USD, ...rates }
           };
@@ -247,7 +260,8 @@ async function getLiveRates() {
   return {
     base: 'USD',
     source: 'Offline Fallback Reference Rates',
-    updatedAt: new Date().toISOString().slice(0, 10),
+    updatedAt: new Date().toISOString(),
+    checkedAt: new Date().toISOString(),
     isLive: false,
     rates: FALLBACK_RATES_USD
   };
@@ -405,7 +419,9 @@ app.get('/api/cities', (req, res) => {
 });
 
 app.get('/api/rates', async (req, res) => {
-  const rateBundle = await getLiveRates();
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  const forceRefresh = req.query.fresh === '1';
+  const rateBundle = await getLiveRates(forceRefresh);
   const subset = {};
   for (const code of ['USD', 'INR', 'AED', 'SGD', 'GBP', 'EUR', 'CAD', 'JPY']) {
     subset[code] = rateBundle.rates[code] || FALLBACK_RATES_USD[code];
@@ -414,6 +430,7 @@ app.get('/api/rates', async (req, res) => {
     base: rateBundle.base,
     source: rateBundle.source,
     updatedAt: rateBundle.updatedAt,
+    checkedAt: rateBundle.checkedAt || new Date().toISOString(),
     isLive: rateBundle.isLive,
     rates: subset
   };
@@ -440,14 +457,15 @@ app.get('/api/rates', async (req, res) => {
   res.type('html').send(renderCleanPage({
     endpoint: '/api/rates',
     title: 'Live Global Exchange Rates',
-    subtitle: `${payload.source} • Updated ${payload.updatedAt}`,
-    sectionTitle: 'Today\'s Currency Conversion Rates (vs. INR & USD)',
+    subtitle: `${payload.source} • Auto-updates daily at 5:30 AM IST (00:00 UTC)`,
+    sectionTitle: "Today's Currency Conversion Rates (vs. INR & USD)",
     visualHtml: `<div class="grid">${cards}</div>`
   }));
 });
 
 app.post('/api/teleport', async (req, res) => {
   try {
+    res.setHeader('Cache-Control', 'no-store');
     const {
       fromCity = 'hyderabad',
       toCity = 'dubai',
@@ -535,7 +553,13 @@ app.post('/api/teleport', async (req, res) => {
     });
 
     res.json({
-      meta: { source: rateBundle.source, updatedAt: rateBundle.updatedAt, isLive: rateBundle.isLive, lifestyle: validLifestyle },
+      meta: {
+        source: rateBundle.source,
+        updatedAt: rateBundle.updatedAt,
+        checkedAt: rateBundle.checkedAt || new Date().toISOString(),
+        isLive: rateBundle.isLive,
+        lifestyle: validLifestyle
+      },
       from,
       to,
       exchange: {
