@@ -209,8 +209,197 @@ function sumBasket(basket, mult) {
   return Object.values(basket).reduce((acc, v) => acc + v * mult, 0);
 }
 
+// ============================================================================
+// BROWSABLE API VIEWER (Polished UI when /api/* is opened directly in browser)
+// ============================================================================
+function highlightJson(obj) {
+  const json = JSON.stringify(obj, null, 2)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  return json.replace(
+    /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+    (match) => {
+      let cls = 'j-num';
+      if (/^"/.test(match)) cls = /:$/.test(match) ? 'j-key' : 'j-str';
+      else if (/true|false/.test(match)) cls = 'j-bool';
+      else if (/null/.test(match)) cls = 'j-null';
+      return `<span class="${cls}">${match}</span>`;
+    }
+  );
+}
+
+function renderBrowsableApi({ endpoint, title, subtitle, payload, visualHtml }) {
+  const safeRawJson = JSON.stringify(JSON.stringify(payload, null, 2)).replace(/</g, '\\u003c');
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${title} — DreamCity Teleporter API</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background: #f4f6fc; color: #0f172a; line-height: 1.5; padding-bottom: 48px;
+    }
+    .topbar {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+      color: #ffffff; padding: 22px 20px;
+    }
+    .topbar-inner {
+      max-width: 1060px; margin: 0 auto; display: flex; flex-wrap: wrap;
+      align-items: center; justify-content: space-between; gap: 14px;
+    }
+    .badges { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+    .pill {
+      font-size: 0.72rem; font-weight: 800; padding: 3px 9px; border-radius: 999px;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .p-get { background: #4f46e5; color: #fff; }
+    .p-ok { background: #16a34a; color: #fff; }
+    .p-path {
+      background: rgba(255,255,255,0.14); color: #e0e7ff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      text-transform: none;
+    }
+    h1 { font-size: 1.4rem; font-weight: 800; }
+    .sub { font-size: 0.84rem; color: #c7d2fe; margin-top: 2px; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.28);
+      color: #fff; text-decoration: none; padding: 8px 14px; border-radius: 9px;
+      font-size: 0.82rem; font-weight: 700; cursor: pointer;
+    }
+    .btn:hover { background: rgba(255,255,255,0.24); }
+    .wrap { max-width: 1060px; margin: 22px auto 0; padding: 0 20px; }
+    .card {
+      background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;
+      padding: 20px; box-shadow: 0 8px 24px rgba(15,23,42,0.06); margin-bottom: 18px;
+    }
+    .card-head {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px; margin-bottom: 14px;
+    }
+    .card-head h2 { font-size: 1.02rem; font-weight: 800; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+    .tile {
+      background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 13px 14px;
+    }
+    .tile-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .code {
+      font-size: 0.78rem; font-weight: 800; background: #eef2ff; color: #4f46e5;
+      padding: 2px 8px; border-radius: 6px;
+    }
+    .big { font-size: 1.18rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+    .muted { font-size: 0.77rem; color: #64748b; margin-top: 2px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+    th { background: #f8fafc; font-size: 0.74rem; text-transform: uppercase; color: #64748b; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+    .json-box {
+      background: #0f172a; color: #e2e8f0; padding: 18px; border-radius: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.82rem; line-height: 1.6; overflow-x: auto; white-space: pre;
+    }
+    .j-key { color: #7dd3fc; }
+    .j-str { color: #86efac; }
+    .j-num { color: #fde68a; }
+    .j-bool { color: #f472b6; }
+    .j-null { color: #94a3b8; }
+    .copy-btn {
+      background: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe;
+      padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
+    }
+    .copy-btn:hover { background: #e0e7ff; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <div class="badges">
+          <span class="pill p-get">GET</span>
+          <span class="pill p-ok">200 OK</span>
+          <span class="pill p-path">${endpoint}</span>
+        </div>
+        <h1>${title}</h1>
+        <p class="sub">${subtitle}</p>
+      </div>
+      <div class="actions">
+        <a href="/" class="btn">← Back to DreamCity Teleporter</a>
+        <a href="${endpoint === '/api/rates' ? '/api/cities' : '/api/rates'}" class="btn">
+          Switch to ${endpoint === '/api/rates' ? 'Cities API' : 'Live Rates API'}
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="card-head">
+        <h2>Structured Response Overview</h2>
+        <span class="muted">Content-Type: application/json (Browsable UI View)</span>
+      </div>
+      ${visualHtml}
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>Formatted JSON Payload</h2>
+        <button class="copy-btn" id="copy-btn" onclick="copyJson()">Copy JSON</button>
+      </div>
+      <pre class="json-box">${highlightJson(payload)}</pre>
+    </section>
+  </main>
+
+  <script>
+    const rawJson = ${safeRawJson};
+    function copyJson() {
+      navigator.clipboard.writeText(rawJson).then(() => {
+        const b = document.getElementById('copy-btn');
+        b.textContent = '✓ Copied!';
+        setTimeout(() => { b.textContent = 'Copy JSON'; }, 1600);
+      });
+    }
+  </script>
+</body>
+</html>`;
+}
+
+// ============================================================================
+// REST API ENDPOINTS
+// ============================================================================
 app.get('/api/cities', (req, res) => {
-  res.json({ count: Object.keys(CITIES).length, cities: Object.values(CITIES) });
+  const payload = { count: Object.keys(CITIES).length, cities: Object.values(CITIES) };
+  const wantsHtml = (req.headers.accept || '').includes('text/html') && req.query.raw !== '1';
+  if (!wantsHtml) return res.json(payload);
+
+  const rows = payload.cities.map(c => {
+    const b = c.basket;
+    const total = b.rent + b.food + b.transport + b.utilities + b.lifestyle;
+    return `<tr>
+      <td><strong>${c.name}</strong>, ${c.country}</td>
+      <td><span class="code">${c.currency}</span></td>
+      <td class="num">${c.symbol}${c.avgTechSalary.toLocaleString()}</td>
+      <td class="num">${Math.round(c.effectiveTaxRate * 100)}%</td>
+      <td class="num">${c.symbol}${b.rent.toLocaleString()}</td>
+      <td class="num" style="color:#4f46e5;">${c.symbol}${total.toLocaleString()}</td>
+    </tr>`;
+  }).join('');
+
+  const visualHtml = `<div style="overflow-x:auto;"><table>
+    <thead><tr><th>City</th><th>Currency</th><th class="num">Avg Tech Salary/mo</th><th class="num">Tax Rate</th><th class="num">1BHK Rent</th><th class="num">Total Monthly Basket</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+
+  res.type('html').send(renderBrowsableApi({
+    endpoint: '/api/cities',
+    title: 'Global Tech Cities Dataset API',
+    subtitle: `${payload.count} cities served live from Node.js Express backend`,
+    payload,
+    visualHtml
+  }));
 });
 
 app.get('/api/rates', async (req, res) => {
@@ -219,13 +408,40 @@ app.get('/api/rates', async (req, res) => {
   for (const code of ['USD', 'INR', 'AED', 'SGD', 'GBP', 'EUR', 'CAD', 'JPY']) {
     subset[code] = rateBundle.rates[code] || FALLBACK_RATES_USD[code];
   }
-  res.json({
+  const payload = {
     base: rateBundle.base,
     source: rateBundle.source,
     updatedAt: rateBundle.updatedAt,
     isLive: rateBundle.isLive,
     rates: subset
-  });
+  };
+
+  const wantsHtml = (req.headers.accept || '').includes('text/html') && req.query.raw !== '1';
+  if (!wantsHtml) return res.json(payload);
+
+  const names = {
+    USD: 'US Dollar', INR: 'Indian Rupee', AED: 'UAE Dirham', SGD: 'Singapore Dollar',
+    GBP: 'British Pound', EUR: 'Euro', CAD: 'Canadian Dollar', JPY: 'Japanese Yen'
+  };
+  const inrPerUsd = subset.INR || 85;
+  const cards = Object.entries(subset).map(([code, perUsd]) => {
+    const inrVal = inrPerUsd / perUsd;
+    const headline = code === 'INR' ? `₹${inrPerUsd.toFixed(2)} / $1` : `1 ${code} = ₹${inrVal.toFixed(2)}`;
+    const detail = code === 'USD' ? 'Global Base Currency' : `1 USD = ${perUsd.toFixed(4)} ${code}`;
+    return `<div class="tile">
+      <div class="tile-top"><span class="muted" style="font-weight:700;">${names[code] || code}</span><span class="code">${code}</span></div>
+      <div class="big">${headline}</div>
+      <div class="muted">${detail}</div>
+    </div>`;
+  }).join('');
+
+  res.type('html').send(renderBrowsableApi({
+    endpoint: '/api/rates',
+    title: 'Live Global Exchange Rates API',
+    subtitle: `${payload.source} • Updated ${payload.updatedAt}`,
+    payload,
+    visualHtml: `<div class="grid">${cards}</div>`
+  }));
 });
 
 app.post('/api/teleport', async (req, res) => {
