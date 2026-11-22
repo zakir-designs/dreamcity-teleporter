@@ -219,6 +219,7 @@ function renderCleanPage({ endpoint, title, subtitle, sectionTitle, visualHtml }
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${title} — DreamCity Teleporter</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=1" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
