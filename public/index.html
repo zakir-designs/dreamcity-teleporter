@@ -13,6 +13,7 @@
       --muted: #64748b;
       --border: #e2e8f0;
       --primary: #4f46e5;
+      --primary-dark: #4338ca;
       --accent: #06b6d4;
       --ok-bg: #dcfce7;
       --ok-fg: #166534;
@@ -23,86 +24,188 @@
       --radius: 16px;
       --shadow: 0 8px 28px rgba(15, 23, 42, 0.07);
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-      background: var(--bg); color: var(--ink); line-height: 1.5; padding-bottom: 64px;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      padding-bottom: 64px;
     }
+
+    /* Hero Banner */
     .hero {
       background: radial-gradient(circle at 15% 20%, #312e81 0%, #1e1b4b 55%, #0f172a 100%);
-      color: #ffffff; padding: 28px 20px 64px;
+      color: #ffffff;
+      padding: 28px 20px 64px;
     }
     .hero-inner {
-      max-width: 1140px; margin: 0 auto; display: flex; flex-wrap: wrap;
-      align-items: center; justify-content: space-between; gap: 18px;
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
     }
     .live-pill {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
-      padding: 5px 12px; border-radius: 999px; font-size: 0.76rem; font-weight: 700;
-      margin-bottom: 10px; color: #e0e7ff;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #e0e7ff;
     }
-    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+      flex-shrink: 0;
+    }
     .hero h1 { font-size: 1.85rem; font-weight: 800; letter-spacing: -0.025em; }
     .hero p { color: #cbd5e1; font-size: 0.94rem; margin-top: 6px; max-width: 640px; }
     .hero-links { display: flex; flex-wrap: wrap; gap: 8px; }
     .hero-btn {
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.24);
-      color: #fff; text-decoration: none; padding: 8px 13px; border-radius: 9px;
-      font-size: 0.8rem; font-weight: 600; cursor: pointer;
+      background: rgba(255, 255, 255, 0.13);
+      border: 1px solid rgba(255, 255, 255, 0.26);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 9px 14px;
+      border-radius: 9px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
     }
-    .hero-btn:hover { background: rgba(255,255,255,0.22); }
+    .hero-btn:hover { background: rgba(255, 255, 255, 0.24); transform: translateY(-1px); }
+
+    /* Container & Cards */
     .container { max-width: 1140px; margin: -40px auto 0; padding: 0 20px; }
     .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); margin-bottom: 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
     }
+
+    /* Controls */
     .control-grid {
-      display: grid; grid-template-columns: 1.1fr auto 1.1fr 1.1fr 1fr; gap: 12px; align-items: end;
+      display: grid;
+      grid-template-columns: 1.1fr auto 1.1fr 1.1fr 1fr;
+      gap: 12px;
+      align-items: end;
     }
     .field label {
-      display: block; font-size: 0.74rem; font-weight: 700; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 5px; letter-spacing: 0.03em;
+      display: block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 5px;
+      letter-spacing: 0.03em;
     }
     .field select, .field input {
-      width: 100%; padding: 11px 12px; border: 1.5px solid var(--border);
-      border-radius: 10px; font-size: 0.94rem; font-weight: 600; background: #fff; color: var(--ink); outline: none;
+      width: 100%;
+      padding: 11px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.94rem;
+      font-weight: 600;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
     }
     .field select:focus, .field input:focus { border-color: var(--primary); }
     .swap-btn {
-      height: 44px; width: 44px; border-radius: 10px; border: 1.5px solid var(--border);
-      background: var(--surface-alt); font-size: 1.15rem; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+      height: 44px;
+      width: 44px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--surface-alt);
+      font-size: 1.15rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
     }
     .swap-btn:hover { background: #eef2ff; border-color: #a5b4fc; transform: rotate(180deg); }
     .btn-primary {
       background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
-      color: #fff; border: none; padding: 12px 18px; border-radius: 10px;
-      font-size: 0.93rem; font-weight: 700; cursor: pointer; width: 100%;
+      color: #fff;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 0.93rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
     }
     .btn-primary:hover { opacity: 0.94; }
+
     .sub-controls {
-      margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border);
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
     }
     .pill-group {
-      display: inline-flex; background: var(--surface-alt); border: 1px solid var(--border);
-      border-radius: 10px; padding: 3px; gap: 3px;
+      display: inline-flex;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 3px;
     }
     .pill-btn {
-      border: none; background: transparent; padding: 7px 12px; border-radius: 7px;
-      font-size: 0.8rem; font-weight: 700; color: var(--muted); cursor: pointer;
+      border: none;
+      background: transparent;
+      padding: 7px 12px;
+      border-radius: 7px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
     }
-    .pill-btn.active { background: #fff; color: var(--primary); box-shadow: 0 1px 4px rgba(15,23,42,0.1); }
+    .pill-btn.active { background: #fff; color: var(--primary); box-shadow: 0 1px 4px rgba(15, 23, 42, 0.1); }
     .offer-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.82rem; color: var(--muted); }
     .offer-inline input {
-      width: 155px; padding: 7px 10px; border: 1.5px solid #c7d2fe;
-      border-radius: 8px; font-size: 0.88rem; font-weight: 700; background: #eef2ff; color: var(--ink);
+      width: 155px;
+      padding: 7px 10px;
+      border: 1.5px solid #c7d2fe;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      background: #eef2ff;
+      color: var(--ink);
     }
+
+    /* Headline Result Banner */
     .teleport-banner {
       background: linear-gradient(135deg, #eef2ff 0%, #ecfeff 100%);
-      border: 1.5px solid #c7d2fe; border-radius: var(--radius); padding: 22px; margin-bottom: 22px;
-      display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; align-items: center;
+      border: 1.5px solid #c7d2fe;
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 22px;
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 20px;
+      align-items: center;
     }
     .tb-eyebrow { font-size: 0.77rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); }
     .tb-big { font-size: 2.15rem; font-weight: 900; letter-spacing: -0.03em; margin: 4px 0; font-variant-numeric: tabular-nums; }
@@ -112,9 +215,12 @@
     .mini-stat span { display: block; font-size: 0.71rem; font-weight: 700; text-transform: uppercase; color: var(--muted); }
     .mini-stat strong { display: block; font-size: 1.15rem; margin-top: 2px; font-variant-numeric: tabular-nums; }
     .mini-stat small { font-size: 0.72rem; color: var(--muted); }
+
+    /* Split Cards */
     .split-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; margin-bottom: 22px; }
     .section-title { font-size: 1.06rem; font-weight: 800; margin-bottom: 4px; }
     .section-sub { font-size: 0.83rem; color: var(--muted); margin-bottom: 16px; }
+
     .basket-row { margin-bottom: 14px; }
     .basket-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.84rem; margin-bottom: 5px; gap: 8px; }
     .ratio-tag { font-size: 0.73rem; font-weight: 800; padding: 2px 7px; border-radius: 999px; }
@@ -125,6 +231,7 @@
     .bar-track { height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
     .bar-fill-from { height: 100%; background: #64748b; border-radius: 999px; transition: width 0.35s ease; }
     .bar-fill-to { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 999px; transition: width 0.35s ease; }
+
     .winner-box { padding: 13px 15px; border-radius: 12px; margin-bottom: 14px; border: 1px solid transparent; }
     .w-ok { background: var(--ok-bg); color: var(--ok-fg); border-color: #86efac; }
     .w-warn { background: var(--warn-bg); color: var(--warn-fg); border-color: #fcd34d; }
@@ -135,10 +242,16 @@
     .kv-list { display: grid; grid-template-columns: 1fr auto; gap: 4px 6px; font-size: 0.79rem; }
     .kv-list span { color: var(--muted); }
     .kv-list strong { text-align: right; font-variant-numeric: tabular-nums; }
+
+    /* Global Grid */
     .global-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 10px; }
     .city-tile {
-      background: var(--surface-alt); border: 1.5px solid var(--border);
-      border-radius: 12px; padding: 12px 13px; cursor: pointer; transition: all 0.15s;
+      background: var(--surface-alt);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 13px;
+      cursor: pointer;
+      transition: all 0.15s;
     }
     .city-tile:hover, .city-tile.active { border-color: var(--primary); background: #eef2ff; transform: translateY(-2px); }
     .ct-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
@@ -146,14 +259,264 @@
     .ct-mult { font-size: 0.74rem; font-weight: 800; color: var(--primary); }
     .ct-req { font-size: 1rem; font-weight: 800; font-variant-numeric: tabular-nums; }
     .ct-inr { font-size: 0.74rem; color: var(--muted); }
+
+    /* MEA Academic Box */
     .mea-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
     .mea-item { background: var(--surface-alt); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
     .mea-item h4 { font-size: 0.9rem; color: #312e81; margin-bottom: 5px; }
     .mea-item p { font-size: 0.81rem; color: var(--muted); }
     .formula {
-      margin-top: 7px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.74rem; background: #fff; border: 1px dashed #cbd5e1; padding: 5px 8px; border-radius: 6px;
+      margin-top: 7px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.74rem;
+      background: #fff;
+      border: 1px dashed #cbd5e1;
+      padding: 5px 8px;
+      border-radius: 6px;
     }
+
+    /* ===================================================================== */
+    /* POLISHED API VIEWER MODALS (LIVE RATES & CITIES DATABASE)             */
+    /* ===================================================================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 1000;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal-box {
+      background: #ffffff;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 920px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+      animation: popIn 0.18s ease-out;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(10px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-head {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+      color: #ffffff;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .modal-head h3 { font-size: 1.15rem; font-weight: 800; }
+    .modal-head p { font-size: 0.8rem; color: #c7d2fe; margin-top: 2px; }
+    .modal-close {
+      background: rgba(255, 255, 255, 0.16);
+      border: none;
+      color: #ffffff;
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .modal-close:hover { background: rgba(255, 255, 255, 0.28); }
+
+    .modal-toolbar {
+      padding: 12px 22px;
+      background: var(--surface-alt);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .modal-body {
+      padding: 20px 22px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    /* Rates Grid */
+    .rates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+      gap: 12px;
+    }
+    .rate-card {
+      background: var(--surface-alt);
+      border: 1.5px solid var(--border);
+      border-radius: 13px;
+      padding: 14px;
+    }
+    .rate-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .cur-code {
+      font-weight: 800;
+      font-size: 0.95rem;
+      background: #eef2ff;
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .rate-inr {
+      font-size: 1.22rem;
+      font-weight: 900;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+    .rate-usd {
+      font-size: 0.77rem;
+      color: var(--muted);
+      margin-top: 3px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Cities Directory Grid */
+    .dir-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .dir-card {
+      background: var(--surface-alt);
+      border: 1.5px solid var(--border);
+      border-radius: 13px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .dir-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .dir-head h4 { font-size: 0.98rem; font-weight: 800; }
+    .dir-head small { display: block; font-size: 0.75rem; color: var(--muted); }
+    .tax-pill {
+      font-size: 0.71rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #e0e7ff;
+      color: #3730a3;
+      white-space: nowrap;
+    }
+    .dir-kv {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3px 8px;
+      font-size: 0.79rem;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 8px 10px;
+    }
+    .dir-kv span { color: var(--muted); }
+    .dir-kv strong { text-align: right; font-variant-numeric: tabular-nums; }
+    .dir-btn {
+      margin-top: auto;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #c7d2fe;
+      background: #eef2ff;
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .dir-btn:hover { background: #e0e7ff; }
+
+    /* Pretty JSON Viewer */
+    .json-pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 16px;
+      border-radius: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.8rem;
+      line-height: 1.55;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    .raw-link {
+      font-size: 0.79rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .raw-link:hover { text-decoration: underline; }
+
+    /* ===================================================================== */
+    /* CRISP PRINT REPORT STYLING (FIXES FADED GRAY HEADER & HIDES BUTTONS)  */
+    /* ===================================================================== */
+    @media print {
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        padding-bottom: 0 !important;
+      }
+      .no-print, .hero-links, .modal-overlay, .offer-tip {
+        display: none !important;
+      }
+      .hero {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        padding: 10px 20px 14px !important;
+        border-bottom: 2.5px solid #0f172a !important;
+        margin-bottom: 16px !important;
+      }
+      .hero h1 {
+        color: #0f172a !important;
+        font-size: 1.6rem !important;
+      }
+      .hero p {
+        color: #334155 !important;
+        font-size: 0.86rem !important;
+      }
+      .live-pill {
+        background: #f1f5f9 !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #0f172a !important;
+      }
+      .container {
+        margin-top: 0 !important;
+        max-width: 100% !important;
+        padding: 0 12px !important;
+      }
+      .card, .teleport-banner {
+        box-shadow: none !important;
+        break-inside: avoid !important;
+        margin-bottom: 14px !important;
+      }
+      .split-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 14px !important;
+      }
+      .city-tile { break-inside: avoid !important; }
+    }
+
     @media (max-width: 920px) {
       .control-grid { grid-template-columns: 1fr 1fr; }
       .swap-btn { display: none; }
@@ -166,6 +529,8 @@
   </style>
 </head>
 <body>
+
+  <!-- Header -->
   <header class="hero">
     <div class="hero-inner">
       <div>
@@ -176,16 +541,17 @@
         <h1>DreamCity Teleporter</h1>
         <p>Teleport your salary to 10 global tech cities using real live exchange rates and <strong>Purchasing Power Parity (PPP)</strong>—see what life really costs and which job offer saves more wealth.</p>
       </div>
-      <div class="hero-links">
-        <a href="/api/rates" target="_blank" class="hero-btn">Live Rates JSON ↗</a>
-        <a href="/api/cities" target="_blank" class="hero-btn">Cities API ↗</a>
+      <div class="hero-links no-print">
+        <button class="hero-btn" onclick="openRatesModal()">Live Exchange Rates</button>
+        <button class="hero-btn" onclick="openCitiesModal()">Cities Database</button>
         <button class="hero-btn" onclick="window.print()">Print Report</button>
       </div>
     </div>
   </header>
 
   <main class="container">
-    <section class="card">
+    <!-- Input Controls (hidden on print so printed report stays clean) -->
+    <section class="card no-print">
       <div class="control-grid">
         <div class="field">
           <label>Current / Origin City</label>
@@ -219,6 +585,7 @@
       </div>
     </section>
 
+    <!-- Main Teleport Result Banner -->
     <section class="teleport-banner" id="result-banner">
       <div>
         <div class="tb-eyebrow" id="tb-eyebrow">Purchasing Power Equivalent Needed</div>
@@ -249,6 +616,7 @@
       </div>
     </section>
 
+    <!-- Basket + Savings Showdown -->
     <section class="split-grid">
       <div class="card" style="margin-bottom:0;">
         <h2 class="section-title">Monthly Living Basket Comparison</h2>
@@ -261,18 +629,20 @@
         <p class="section-sub">Compares real monthly savings AFTER local taxes &amp; living costs (5-Year Wealth Impact).</p>
         <div id="winner-box" class="winner-box w-ok"></div>
         <div class="compare-cards" id="compare-cards"></div>
-        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:10px; padding:11px 13px; font-size:0.8rem; color:#334155;">
+        <div class="offer-tip" style="background:#f8fafc; border:1px solid var(--border); border-radius:10px; padding:11px 13px; font-size:0.8rem; color:#334155;">
           <strong>Tip for Job Offers:</strong> Type any monthly job offer in the <em>"Test a Target Job Offer"</em> box above (e.g., <code>15000</code> AED in Dubai or <code>8500</code> USD in New York) to check whether moving abroad grows your net wealth.
         </div>
       </div>
     </section>
 
+    <!-- World Grid -->
     <section class="card">
       <h2 class="section-title">Instant World Map — Click Any City to Teleport</h2>
       <p class="section-sub">Shows the exact monthly salary required in all 10 cities to maintain your exact current lifestyle.</p>
       <div class="global-grid" id="global-grid"></div>
     </section>
 
+    <!-- MEA Concepts -->
     <section class="card">
       <h2 class="section-title">MEA (Managerial Economics) Concepts Powered by This Backend</h2>
       <p class="section-sub">How this real-world lifestyle tool directly implements core syllabus economics.</p>
@@ -301,9 +671,74 @@
     </section>
   </main>
 
+  <!-- ===================================================================== -->
+  <!-- MODAL 1: POLISHED LIVE EXCHANGE RATES DASHBOARD                       -->
+  <!-- ===================================================================== -->
+  <div id="modal-rates" class="modal-overlay no-print" onclick="closeModalOnBackdrop(event, 'modal-rates')">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div>
+          <h3>Live Global Exchange Rates (Backend API)</h3>
+          <p id="rates-modal-sub">Fetching live rates from /api/rates...</p>
+        </div>
+        <button class="modal-close" onclick="closeModal('modal-rates')" aria-label="Close">×</button>
+      </div>
+      <div class="modal-toolbar">
+        <div class="pill-group">
+          <button id="rtab-ui" class="pill-btn active" onclick="switchRatesView('ui')">Visual Dashboard</button>
+          <button id="rtab-json" class="pill-btn" onclick="switchRatesView('json')">Formatted JSON</button>
+        </div>
+        <a href="/api/rates" target="_blank" class="raw-link">Open Raw Endpoint (/api/rates) ↗</a>
+      </div>
+      <div class="modal-body">
+        <div id="rates-ui-view" class="rates-grid"></div>
+        <pre id="rates-json-view" class="json-pre" style="display:none;"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 2: POLISHED CITIES DATABASE EXPLORER                            -->
+  <!-- ===================================================================== -->
+  <div id="modal-cities" class="modal-overlay no-print" onclick="closeModalOnBackdrop(event, 'modal-cities')">
+    <div class="modal-box">
+      <div class="modal-head">
+        <div>
+          <h3>Global Tech Cities Dataset (Backend API)</h3>
+          <p id="cities-modal-sub">All 10 cities stored in your Node.js Express backend (/api/cities)</p>
+        </div>
+        <button class="modal-close" onclick="closeModal('modal-cities')" aria-label="Close">×</button>
+      </div>
+      <div class="modal-toolbar">
+        <div class="pill-group">
+          <button id="ctab-ui" class="pill-btn active" onclick="switchCitiesView('ui')">Visual Directory</button>
+          <button id="ctab-json" class="pill-btn" onclick="switchCitiesView('json')">Formatted JSON</button>
+        </div>
+        <a href="/api/cities" target="_blank" class="raw-link">Open Raw Endpoint (/api/cities) ↗</a>
+      </div>
+      <div class="modal-body">
+        <div id="cities-ui-view" class="dir-grid"></div>
+        <pre id="cities-json-view" class="json-pre" style="display:none;"></pre>
+      </div>
+    </div>
+  </div>
+
   <script>
     let allCities = [];
+    let allCitiesPayload = null;
+    let latestRatesPayload = null;
     let currentTier = 'standard';
+
+    const CURRENCY_META = {
+      USD: { name: 'US Dollar', symbol: '$' },
+      INR: { name: 'Indian Rupee', symbol: '₹' },
+      AED: { name: 'UAE Dirham', symbol: 'AED ' },
+      SGD: { name: 'Singapore Dollar', symbol: 'S$' },
+      GBP: { name: 'British Pound', symbol: '£' },
+      EUR: { name: 'Euro', symbol: '€' },
+      CAD: { name: 'Canadian Dollar', symbol: 'C$' },
+      JPY: { name: 'Japanese Yen', symbol: '¥' }
+    };
 
     function fmtMoney(amount, symbol, currency) {
       const sign = amount < 0 ? '-' : '';
@@ -317,10 +752,11 @@
       try {
         const res = await fetch('/api/cities');
         const data = await res.json();
+        allCitiesPayload = data;
         allCities = data.cities || [];
         const selFrom = document.getElementById('sel-from');
         const selTo = document.getElementById('sel-to');
-        const opts = allCities.map(c => `<option value="${c.id}">${c.flag} ${c.name}, ${c.country} (${c.currency})</option>`).join('');
+        const opts = allCities.map(c => `<option value="${c.id}">${c.name}, ${c.country} (${c.currency})</option>`).join('');
         selFrom.innerHTML = opts;
         selTo.innerHTML = opts;
         selFrom.value = 'hyderabad';
@@ -363,7 +799,7 @@
 
     function setTier(tier) {
       currentTier = tier;
-      document.querySelectorAll('.pill-btn').forEach(b => b.classList.toggle('active', b.dataset.tier === tier));
+      document.querySelectorAll('.sub-controls .pill-btn').forEach(b => b.classList.toggle('active', b.dataset.tier === tier));
       runTeleport();
     }
 
@@ -372,6 +808,7 @@
       document.getElementById('in-offer').value = '';
       updateSalaryLabels();
       runTeleport();
+      closeModal('modal-cities');
       window.scrollTo({ top: 120, behavior: 'smooth' });
     }
 
@@ -406,7 +843,7 @@
       const { from, to, summary, exchange, offerShowdown, basketComparison, globalOverview, meta } = d;
 
       document.getElementById('live-source-text').textContent = `${meta.source} • Updated ${meta.updatedAt.slice(0, 16)}`;
-      document.getElementById('tb-eyebrow').textContent = `${from.flag} ${from.name} → ${to.flag} ${to.name} (${meta.lifestyle.toUpperCase()} LIFESTYLE)`;
+      document.getElementById('tb-eyebrow').textContent = `${from.name} → ${to.name} (${meta.lifestyle.toUpperCase()} LIFESTYLE)`;
       document.getElementById('tb-big').textContent = `${fmtMoney(summary.requiredTargetLocal, to.symbol, to.currency)} / month`;
 
       const comparePhrase =
@@ -460,7 +897,7 @@
       const wb = document.getElementById('winner-box');
       wb.className = `winner-box ${winIsTo ? 'w-ok' : 'w-warn'}`;
       wb.innerHTML = `
-        <strong>${winnerCity.flag} ${winnerCity.name} Wins on Real Wealth!</strong>
+        <strong>${winnerCity.name} Wins on Real Wealth!</strong>
         <div style="font-size:0.83rem; margin-top:3px;">
           ${offerShowdown.isCustomOffer ? 'With your entered job offer,' : `Using ${to.name}'s avg tech salary,`}
           <strong>${winnerCity.name}</strong> lets you save <strong>${fmtINR(diffAbs)}/month more</strong> (${fmtINR(diffAbs * 60)} extra wealth over 5 years).
@@ -468,7 +905,7 @@
 
       document.getElementById('compare-cards').innerHTML = `
         <div class="cc-box ${!winIsTo ? 'is-winner' : ''}">
-          <h4>${from.flag} ${from.name}</h4>
+          <h4>${from.name} (${from.currency})</h4>
           <div class="kv-list">
             <span>Gross / mo</span><strong>${fmtMoney(offerShowdown.fromGrossLocal, from.symbol, from.currency)}</strong>
             <span>Tax (~${Math.round(from.effectiveTaxRate * 100)}%)</span><strong>${fmtMoney(offerShowdown.fromGrossLocal - offerShowdown.fromNetLocal, from.symbol, from.currency)}</strong>
@@ -478,7 +915,7 @@
           </div>
         </div>
         <div class="cc-box ${winIsTo ? 'is-winner' : ''}">
-          <h4>${to.flag} ${to.name}</h4>
+          <h4>${to.name} (${to.currency})</h4>
           <div class="kv-list">
             <span>${offerShowdown.isCustomOffer ? 'Offer / mo' : 'Avg Tech / mo'}</span><strong>${fmtMoney(offerShowdown.toGrossLocal, to.symbol, to.currency)}</strong>
             <span>Tax (~${Math.round(to.effectiveTaxRate * 100)}%)</span><strong>${fmtMoney(offerShowdown.toGrossLocal - offerShowdown.toNetLocal, to.symbol, to.currency)}</strong>
@@ -491,13 +928,128 @@
       document.getElementById('global-grid').innerHTML = globalOverview.map(c => `
         <div class="city-tile ${c.id === to.id ? 'active' : ''}" onclick="selectTargetFromGrid('${c.id}')">
           <div class="ct-top">
-            <span class="ct-name">${c.flag} ${c.name}</span>
+            <span class="ct-name">${c.name}</span>
             <span class="ct-mult">${c.costMultiplier}×</span>
           </div>
           <div class="ct-req">${fmtMoney(c.requiredMonthlyLocal, c.symbol, c.currency)}/mo</div>
           <div class="ct-inr">≈ ${fmtINR(c.requiredMonthlyINR)}/mo • Tax ${c.effectiveTaxPct}%</div>
         </div>`).join('');
     }
+
+    // =========================================================================
+    // POLISHED MODAL 1: LIVE RATES DASHBOARD
+    // =========================================================================
+    async function openRatesModal() {
+      document.getElementById('modal-rates').classList.add('open');
+      switchRatesView('ui');
+      const grid = document.getElementById('rates-ui-view');
+      grid.innerHTML = '<p style="color:var(--muted);">Loading live central-bank exchange rates...</p>';
+
+      try {
+        const res = await fetch('/api/rates');
+        latestRatesPayload = await res.json();
+        const { source, updatedAt, rates } = latestRatesPayload;
+        const inrPerUsd = rates.INR || 85;
+
+        document.getElementById('rates-modal-sub').textContent = `${source} • Updated ${updatedAt}`;
+        document.getElementById('rates-json-view').textContent = JSON.stringify(latestRatesPayload, null, 2);
+
+        grid.innerHTML = Object.entries(rates).map(([code, perUsd]) => {
+          const info = CURRENCY_META[code] || { name: code, symbol: code + ' ' };
+          const inrValue = inrPerUsd / perUsd;
+          const mainLine = code === 'INR'
+            ? `₹${inrPerUsd.toFixed(2)} / $1`
+            : `1 ${code} = ₹${inrValue.toFixed(2)}`;
+          const subLine = code === 'USD'
+            ? 'Global Base Currency'
+            : `1 USD = ${perUsd.toFixed(4)} ${code}`;
+          return `
+            <div class="rate-card">
+              <div class="rate-top">
+                <span style="font-size:0.82rem; font-weight:700; color:var(--muted);">${info.name}</span>
+                <span class="cur-code">${code}</span>
+              </div>
+              <div class="rate-inr">${mainLine}</div>
+              <div class="rate-usd">${subLine}</div>
+            </div>`;
+        }).join('');
+      } catch {
+        grid.innerHTML = '<p style="color:#dc2626;">Could not load live rates from /api/rates.</p>';
+      }
+    }
+
+    function switchRatesView(view) {
+      document.getElementById('rates-ui-view').style.display = view === 'ui' ? 'grid' : 'none';
+      document.getElementById('rates-json-view').style.display = view === 'json' ? 'block' : 'none';
+      document.getElementById('rtab-ui').classList.toggle('active', view === 'ui');
+      document.getElementById('rtab-json').classList.toggle('active', view === 'json');
+    }
+
+    // =========================================================================
+    // POLISHED MODAL 2: CITIES DATABASE DIRECTORY
+    // =========================================================================
+    async function openCitiesModal() {
+      document.getElementById('modal-cities').classList.add('open');
+      switchCitiesView('ui');
+      const grid = document.getElementById('cities-ui-view');
+
+      if (!allCitiesPayload) {
+        grid.innerHTML = '<p style="color:var(--muted);">Loading cities from /api/cities...</p>';
+        const res = await fetch('/api/cities');
+        allCitiesPayload = await res.json();
+        allCities = allCitiesPayload.cities || [];
+      }
+
+      document.getElementById('cities-modal-sub').textContent =
+        `${allCities.length} Global Tech Cities • Live Express Backend Dataset (/api/cities)`;
+      document.getElementById('cities-json-view').textContent = JSON.stringify(allCitiesPayload, null, 2);
+
+      grid.innerHTML = allCities.map(c => {
+        const b = c.basket;
+        const total = b.rent + b.food + b.transport + b.utilities + b.lifestyle;
+        return `
+          <div class="dir-card">
+            <div class="dir-head">
+              <div>
+                <h4>${c.name}, ${c.country}</h4>
+                <small>${c.tagline} (${c.currency})</small>
+              </div>
+              <span class="tax-pill">Tax ${Math.round(c.effectiveTaxRate * 100)}%</span>
+            </div>
+            <div class="dir-kv">
+              <span>Avg Tech Salary</span><strong>${fmtMoney(c.avgTechSalary, c.symbol, c.currency)}/mo</strong>
+              <span>1BHK Rent</span><strong>${fmtMoney(b.rent, c.symbol, c.currency)}</strong>
+              <span>Food &amp; Groceries</span><strong>${fmtMoney(b.food, c.symbol, c.currency)}</strong>
+              <span>Transport + Utilities</span><strong>${fmtMoney(b.transport + b.utilities, c.symbol, c.currency)}</strong>
+              <span>Lifestyle</span><strong>${fmtMoney(b.lifestyle, c.symbol, c.currency)}</strong>
+              <span style="color:var(--ink); font-weight:700;">Total Monthly Basket</span><strong style="color:var(--primary);">${fmtMoney(total, c.symbol, c.currency)}</strong>
+            </div>
+            <button class="dir-btn" onclick="selectTargetFromGrid('${c.id}')">Teleport to ${c.name} →</button>
+          </div>`;
+      }).join('');
+    }
+
+    function switchCitiesView(view) {
+      document.getElementById('cities-ui-view').style.display = view === 'ui' ? 'grid' : 'none';
+      document.getElementById('cities-json-view').style.display = view === 'json' ? 'block' : 'none';
+      document.getElementById('ctab-ui').classList.toggle('active', view === 'ui');
+      document.getElementById('ctab-json').classList.toggle('active', view === 'json');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    function closeModalOnBackdrop(e, id) {
+      if (e.target.id === id) closeModal(id);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal('modal-rates');
+        closeModal('modal-cities');
+      }
+    });
 
     initApp();
   </script>
