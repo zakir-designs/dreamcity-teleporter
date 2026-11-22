@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DreamCity Teleporter — Global Lifestyle &amp; Purchasing Power Engine</title>
+  <style>
+    :root {
+      --bg: #f4f6fc;
+      --surface: #ffffff;
+      --surface-alt: #f8fafc;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #4f46e5;
+      --accent: #06b6d4;
+      --ok-bg: #dcfce7;
+      --ok-fg: #166534;
+      --warn-bg: #fef3c7;
+      --warn-fg: #92400e;
+      --danger-bg: #fee2e2;
+      --danger-fg: #991b1b;
+      --radius: 16px;
+      --shadow: 0 8px 28px rgba(15, 23, 42, 0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background: var(--bg); color: var(--ink); line-height: 1.5; padding-bottom: 64px;
+    }
+    .hero {
+      background: radial-gradient(circle at 15% 20%, #312e81 0%, #1e1b4b 55%, #0f172a 100%);
+      color: #ffffff; padding: 28px 20px 64px;
+    }
+    .hero-inner {
+      max-width: 1140px; margin: 0 auto; display: flex; flex-wrap: wrap;
+      align-items: center; justify-content: space-between; gap: 18px;
+    }
+    .live-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+      padding: 5px 12px; border-radius: 999px; font-size: 0.76rem; font-weight: 700;
+      margin-bottom: 10px; color: #e0e7ff;
+    }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+    .hero h1 { font-size: 1.85rem; font-weight: 800; letter-spacing: -0.025em; }
+    .hero p { color: #cbd5e1; font-size: 0.94rem; margin-top: 6px; max-width: 640px; }
+    .hero-links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .hero-btn {
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.24);
+      color: #fff; text-decoration: none; padding: 8px 13px; border-radius: 9px;
+      font-size: 0.8rem; font-weight: 600; cursor: pointer;
+    }
+    .hero-btn:hover { background: rgba(255,255,255,0.22); }
+    .container { max-width: 1140px; margin: -40px auto 0; padding: 0 20px; }
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); margin-bottom: 22px;
+    }
+    .control-grid {
+      display: grid; grid-template-columns: 1.1fr auto 1.1fr 1.1fr 1fr; gap: 12px; align-items: end;
+    }
+    .field label {
+      display: block; font-size: 0.74rem; font-weight: 700; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 5px; letter-spacing: 0.03em;
+    }
+    .field select, .field input {
+      width: 100%; padding: 11px 12px; border: 1.5px solid var(--border);
+      border-radius: 10px; font-size: 0.94rem; font-weight: 600; background: #fff; color: var(--ink); outline: none;
+    }
+    .field select:focus, .field input:focus { border-color: var(--primary); }
+    .swap-btn {
+      height: 44px; width: 44px; border-radius: 10px; border: 1.5px solid var(--border);
+      background: var(--surface-alt); font-size: 1.15rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+    }
+    .swap-btn:hover { background: #eef2ff; border-color: #a5b4fc; transform: rotate(180deg); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+      color: #fff; border: none; padding: 12px 18px; border-radius: 10px;
+      font-size: 0.93rem; font-weight: 700; cursor: pointer; width: 100%;
+    }
+    .btn-primary:hover { opacity: 0.94; }
+    .sub-controls {
+      margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--border);
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px;
+    }
+    .pill-group {
+      display: inline-flex; background: var(--surface-alt); border: 1px solid var(--border);
+      border-radius: 10px; padding: 3px; gap: 3px;
+    }
+    .pill-btn {
+      border: none; background: transparent; padding: 7px 12px; border-radius: 7px;
+      font-size: 0.8rem; font-weight: 700; color: var(--muted); cursor: pointer;
+    }
+    .pill-btn.active { background: #fff; color: var(--primary); box-shadow: 0 1px 4px rgba(15,23,42,0.1); }
+    .offer-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.82rem; color: var(--muted); }
+    .offer-inline input {
+      width: 155px; padding: 7px 10px; border: 1.5px solid #c7d2fe;
+      border-radius: 8px; font-size: 0.88rem; font-weight: 700; background: #eef2ff; color: var(--ink);
+    }
+    .teleport-banner {
+      background: linear-gradient(135deg, #eef2ff 0%, #ecfeff 100%);
+      border: 1.5px solid #c7d2fe; border-radius: var(--radius); padding: 22px; margin-bottom: 22px;
+      display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; align-items: center;
+    }
+    .tb-eyebrow { font-size: 0.77rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); }
+    .tb-big { font-size: 2.15rem; font-weight: 900; letter-spacing: -0.03em; margin: 4px 0; font-variant-numeric: tabular-nums; }
+    .tb-sub { font-size: 0.9rem; color: #334155; }
+    .tb-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .mini-stat { background: #fff; border: 1px solid #dbeafe; border-radius: 12px; padding: 12px 14px; }
+    .mini-stat span { display: block; font-size: 0.71rem; font-weight: 700; text-transform: uppercase; color: var(--muted); }
+    .mini-stat strong { display: block; font-size: 1.15rem; margin-top: 2px; font-variant-numeric: tabular-nums; }
+    .mini-stat small { font-size: 0.72rem; color: var(--muted); }
+    .split-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px; margin-bottom: 22px; }
+    .section-title { font-size: 1.06rem; font-weight: 800; margin-bottom: 4px; }
+    .section-sub { font-size: 0.83rem; color: var(--muted); margin-bottom: 16px; }
+    .basket-row { margin-bottom: 14px; }
+    .basket-head { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.84rem; margin-bottom: 5px; gap: 8px; }
+    .ratio-tag { font-size: 0.73rem; font-weight: 800; padding: 2px 7px; border-radius: 999px; }
+    .r-up { background: var(--danger-bg); color: var(--danger-fg); }
+    .r-down { background: var(--ok-bg); color: var(--ok-fg); }
+    .dual-bars { display: flex; flex-direction: column; gap: 5px; }
+    .bar-line { display: grid; grid-template-columns: 76px 1fr 96px; align-items: center; gap: 8px; font-size: 0.76rem; }
+    .bar-track { height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+    .bar-fill-from { height: 100%; background: #64748b; border-radius: 999px; transition: width 0.35s ease; }
+    .bar-fill-to { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 999px; transition: width 0.35s ease; }
+    .winner-box { padding: 13px 15px; border-radius: 12px; margin-bottom: 14px; border: 1px solid transparent; }
+    .w-ok { background: var(--ok-bg); color: var(--ok-fg); border-color: #86efac; }
+    .w-warn { background: var(--warn-bg); color: var(--warn-fg); border-color: #fcd34d; }
+    .compare-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .cc-box { background: var(--surface-alt); border: 1.5px solid var(--border); border-radius: 12px; padding: 12px; }
+    .cc-box.is-winner { border-color: #22c55e; background: #f0fdf4; }
+    .cc-box h4 { font-size: 0.9rem; margin-bottom: 8px; }
+    .kv-list { display: grid; grid-template-columns: 1fr auto; gap: 4px 6px; font-size: 0.79rem; }
+    .kv-list span { color: var(--muted); }
+    .kv-list strong { text-align: right; font-variant-numeric: tabular-nums; }
+    .global-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 10px; }
+    .city-tile {
+      background: var(--surface-alt); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 12px 13px; cursor: pointer; transition: all 0.15s;
+    }
+    .city-tile:hover, .city-tile.active { border-color: var(--primary); background: #eef2ff; transform: translateY(-2px); }
+    .ct-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .ct-name { font-weight: 800; font-size: 0.9rem; }
+    .ct-mult { font-size: 0.74rem; font-weight: 800; color: var(--primary); }
+    .ct-req { font-size: 1rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .ct-inr { font-size: 0.74rem; color: var(--muted); }
+    .mea-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+    .mea-item { background: var(--surface-alt); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+    .mea-item h4 { font-size: 0.9rem; color: #312e81; margin-bottom: 5px; }
+    .mea-item p { font-size: 0.81rem; color: var(--muted); }
+    .formula {
+      margin-top: 7px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.74rem; background: #fff; border: 1px dashed #cbd5e1; padding: 5px 8px; border-radius: 6px;
+    }
+    @media (max-width: 920px) {
+      .control-grid { grid-template-columns: 1fr 1fr; }
+      .swap-btn { display: none; }
+      .teleport-banner, .split-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .control-grid, .compare-cards, .tb-stats { grid-template-columns: 1fr; }
+      .tb-big { font-size: 1.65rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="live-pill">
+          <span class="live-dot"></span>
+          <span id="live-source-text">Connecting to Live Global Forex Backend...</span>
+        </div>
+        <h1>DreamCity Teleporter</h1>
+        <p>Teleport your salary to 10 global tech cities using real live exchange rates and <strong>Purchasing Power Parity (PPP)</strong>—see what life really costs and which job offer saves more wealth.</p>
+      </div>
+      <div class="hero-links">
+        <a href="/api/rates" target="_blank" class="hero-btn">Live Rates JSON ↗</a>
+        <a href="/api/cities" target="_blank" class="hero-btn">Cities API ↗</a>
+        <button class="hero-btn" onclick="window.print()">Print Report</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="control-grid">
+        <div class="field">
+          <label>Current / Origin City</label>
+          <select id="sel-from" onchange="onCityChange()"></select>
+        </div>
+        <button class="swap-btn" title="Swap Cities" onclick="swapCities()">⇄</button>
+        <div class="field">
+          <label>Dream / Target City</label>
+          <select id="sel-to" onchange="runTeleport()"></select>
+        </div>
+        <div class="field">
+          <label id="lbl-salary">Monthly Salary (₹)</label>
+          <input type="number" id="in-salary" value="60000" min="100" step="500" />
+        </div>
+        <button class="btn-primary" id="btn-teleport" onclick="runTeleport()">Teleport Now →</button>
+      </div>
+
+      <div class="sub-controls">
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <span style="font-size:0.78rem; font-weight:700; color:var(--muted); text-transform:uppercase;">Lifestyle Tier:</span>
+          <div class="pill-group">
+            <button class="pill-btn" data-tier="student" onclick="setTier('student')">Fresher / Shared</button>
+            <button class="pill-btn active" data-tier="standard" onclick="setTier('standard')">Standard 1BHK</button>
+            <button class="pill-btn" data-tier="comfort" onclick="setTier('comfort')">Comfort / Luxury</button>
+          </div>
+        </div>
+        <div class="offer-inline">
+          <label for="in-offer"><strong id="lbl-offer">Test a Target Job Offer (Optional, /mo):</strong></label>
+          <input type="number" id="in-offer" placeholder="Uses city avg" min="0" onchange="runTeleport()" />
+        </div>
+      </div>
+    </section>
+
+    <section class="teleport-banner" id="result-banner">
+      <div>
+        <div class="tb-eyebrow" id="tb-eyebrow">Purchasing Power Equivalent Needed</div>
+        <div class="tb-big" id="tb-big">Loading...</div>
+        <p class="tb-sub" id="tb-sub">Calculating live global rates from Express backend...</p>
+      </div>
+      <div class="tb-stats">
+        <div class="mini-stat">
+          <span>Cost-of-Living Ratio</span>
+          <strong id="st-mult">—</strong>
+          <small id="st-mult-sub">PPP Index Multiplier</small>
+        </div>
+        <div class="mini-stat">
+          <span>Live Market Rate</span>
+          <strong id="st-rate">—</strong>
+          <small id="st-rate-sub">Central Bank Rate</small>
+        </div>
+        <div class="mini-stat">
+          <span>Equivalent in INR</span>
+          <strong id="st-inr">—</strong>
+          <small id="st-lpa">— LPA equivalent</small>
+        </div>
+        <div class="mini-stat">
+          <span>Real Power If Unchanged</span>
+          <strong id="st-power">—</strong>
+          <small>Nominal vs Real Income</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="split-grid">
+      <div class="card" style="margin-bottom:0;">
+        <h2 class="section-title">Monthly Living Basket Comparison</h2>
+        <p class="section-sub">Every expense converted to ₹ INR using live exchange rates for an apples-to-apples comparison.</p>
+        <div id="basket-list"></div>
+      </div>
+
+      <div class="card" style="margin-bottom:0;">
+        <h2 class="section-title">True Wealth &amp; Savings Showdown</h2>
+        <p class="section-sub">Compares real monthly savings AFTER local taxes &amp; living costs (5-Year Wealth Impact).</p>
+        <div id="winner-box" class="winner-box w-ok"></div>
+        <div class="compare-cards" id="compare-cards"></div>
+        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:10px; padding:11px 13px; font-size:0.8rem; color:#334155;">
+          <strong>Tip for Job Offers:</strong> Type any monthly job offer in the <em>"Test a Target Job Offer"</em> box above (e.g., <code>15000</code> AED in Dubai or <code>8500</code> USD in New York) to check whether moving abroad grows your net wealth.
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">Instant World Map — Click Any City to Teleport</h2>
+      <p class="section-sub">Shows the exact monthly salary required in all 10 cities to maintain your exact current lifestyle.</p>
+      <div class="global-grid" id="global-grid"></div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">MEA (Managerial Economics) Concepts Powered by This Backend</h2>
+      <p class="section-sub">How this real-world lifestyle tool directly implements core syllabus economics.</p>
+      <div class="mea-grid">
+        <div class="mea-item">
+          <h4>1. Purchasing Power Parity (PPP)</h4>
+          <p>Exchange rates alone do not reflect real living standards. PPP compares what an identical basket of goods costs across two economies.</p>
+          <div class="formula">PPP Rate = Target Basket ÷ Origin Basket</div>
+        </div>
+        <div class="mea-item">
+          <h4>2. Real vs. Nominal Income</h4>
+          <p>A ₹60 LPA salary abroad sounds huge nominally, but after higher rent and 28% tax, real savings can sometimes be lower than ₹15 LPA in India.</p>
+          <div class="formula">Real Savings = Gross × (1 − Tax) − Basket</div>
+        </div>
+        <div class="mea-item">
+          <h4>3. Live Foreign Exchange Rate</h4>
+          <p>Our Node.js Express backend fetches live daily currency rates via REST API and caches them server-side so conversions stay accurate globally.</p>
+          <div class="formula">Nominal Value = Salary × (Rate_To / Rate_From)</div>
+        </div>
+        <div class="mea-item">
+          <h4>4. Opportunity Cost of Migration</h4>
+          <p>Compares 5-year accumulated wealth in INR across two cities so graduates weigh financial trade-offs rationally.</p>
+          <div class="formula">5-Yr Net Gain = 60 × (Savings_B − Savings_A)</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let allCities = [];
+    let currentTier = 'standard';
+
+    function fmtMoney(amount, symbol, currency) {
+      const sign = amount < 0 ? '-' : '';
+      const absVal = Math.round(Math.abs(amount));
+      const locale = currency === 'INR' ? 'en-IN' : 'en-US';
+      return `${sign}${symbol}${absVal.toLocaleString(locale)}`;
+    }
+    function fmtINR(amount) { return fmtMoney(amount, '₹', 'INR'); }
+
+    async function initApp() {
+      try {
+        const res = await fetch('/api/cities');
+        const data = await res.json();
+        allCities = data.cities || [];
+        const selFrom = document.getElementById('sel-from');
+        const selTo = document.getElementById('sel-to');
+        const opts = allCities.map(c => `<option value="${c.id}">${c.flag} ${c.name}, ${c.country} (${c.currency})</option>`).join('');
+        selFrom.innerHTML = opts;
+        selTo.innerHTML = opts;
+        selFrom.value = 'hyderabad';
+        selTo.value = 'dubai';
+        updateSalaryLabels();
+        await runTeleport();
+      } catch {
+        document.getElementById('live-source-text').textContent = 'Backend API unreachable — check deployment';
+      }
+    }
+
+    function getCity(id) { return allCities.find(c => c.id === id); }
+
+    function updateSalaryLabels() {
+      const from = getCity(document.getElementById('sel-from').value);
+      const to = getCity(document.getElementById('sel-to').value);
+      if (from) document.getElementById('lbl-salary').textContent = `Monthly Salary (${from.currency})`;
+      if (to) {
+        document.getElementById('lbl-offer').textContent = `Test a ${to.name} Offer (${to.currency}/mo):`;
+        document.getElementById('in-offer').placeholder = `Avg: ${to.avgTechSalary.toLocaleString()}`;
+      }
+    }
+
+    function onCityChange() {
+      const from = getCity(document.getElementById('sel-from').value);
+      if (from) document.getElementById('in-salary').value = from.avgTechSalary;
+      document.getElementById('in-offer').value = '';
+      updateSalaryLabels();
+      runTeleport();
+    }
+
+    function swapCities() {
+      const selFrom = document.getElementById('sel-from');
+      const selTo = document.getElementById('sel-to');
+      const tmp = selFrom.value;
+      selFrom.value = selTo.value;
+      selTo.value = tmp;
+      onCityChange();
+    }
+
+    function setTier(tier) {
+      currentTier = tier;
+      document.querySelectorAll('.pill-btn').forEach(b => b.classList.toggle('active', b.dataset.tier === tier));
+      runTeleport();
+    }
+
+    function selectTargetFromGrid(cityId) {
+      document.getElementById('sel-to').value = cityId;
+      document.getElementById('in-offer').value = '';
+      updateSalaryLabels();
+      runTeleport();
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    async function runTeleport() {
+      updateSalaryLabels();
+      const fromCity = document.getElementById('sel-from').value;
+      const toCity = document.getElementById('sel-to').value;
+      const monthlySalary = parseFloat(document.getElementById('in-salary').value) || 50000;
+      const offerRaw = document.getElementById('in-offer').value.trim();
+      const targetOfferSalary = offerRaw ? parseFloat(offerRaw) : null;
+
+      const btn = document.getElementById('btn-teleport');
+      btn.textContent = 'Calculating...';
+
+      try {
+        const res = await fetch('/api/teleport', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fromCity, toCity, monthlySalary, targetOfferSalary, lifestyle: currentTier })
+        });
+        const data = await res.json();
+        if (data.error) { alert(data.error); return; }
+        renderResults(data);
+      } catch {
+        alert('Could not reach backend API. Please refresh the page.');
+      } finally {
+        btn.textContent = 'Teleport Now →';
+      }
+    }
+
+    function renderResults(d) {
+      const { from, to, summary, exchange, offerShowdown, basketComparison, globalOverview, meta } = d;
+
+      document.getElementById('live-source-text').textContent = `${meta.source} • Updated ${meta.updatedAt.slice(0, 16)}`;
+      document.getElementById('tb-eyebrow').textContent = `${from.flag} ${from.name} → ${to.flag} ${to.name} (${meta.lifestyle.toUpperCase()} LIFESTYLE)`;
+      document.getElementById('tb-big').textContent = `${fmtMoney(summary.requiredTargetLocal, to.symbol, to.currency)} / month`;
+
+      const comparePhrase =
+        summary.costMultiplier > 1.02
+          ? `<strong>${summary.costMultiplier}× more expensive</strong> than`
+          : summary.costMultiplier < 0.98
+            ? `<strong>${(1 / summary.costMultiplier).toFixed(2)}× cheaper</strong> than`
+            : `about the <strong>same cost</strong> as`;
+
+      document.getElementById('tb-sub').innerHTML =
+        `To match your <strong>${fmtMoney(summary.inputSalaryFromLocal, from.symbol, from.currency)}/mo</strong> lifestyle in ${from.name}, you need <strong>${fmtMoney(summary.requiredTargetAnnualLocal, to.symbol, to.currency)}/year</strong> in ${to.name} (${to.name} is ${comparePhrase} ${from.name}).`;
+
+      document.getElementById('st-mult').textContent = `${summary.costMultiplier}×`;
+      document.getElementById('st-mult-sub').textContent = summary.costMultiplier >= 1 ? `${to.name} costs more` : `${to.name} costs less`;
+      document.getElementById('st-rate').textContent =
+        to.currency === 'INR' ? `1 ${from.currency} = ₹${exchange.oneFromInINR}` : `1 ${to.currency} = ₹${exchange.oneToInINR}`;
+      document.getElementById('st-rate-sub').textContent = `1 ${from.currency} = ${exchange.marketRate} ${to.currency}`;
+      document.getElementById('st-inr').textContent = `${fmtINR(summary.requiredTargetINR)}/mo`;
+      document.getElementById('st-lpa').textContent = `≈ ₹${summary.requiredTargetAnnualLPA} LPA equivalent`;
+      document.getElementById('st-power').textContent = `${summary.realPowerPercent}%`;
+
+      const maxVal = Math.max(...basketComparison.flatMap(b => [b.fromINR, b.toINR]), 1);
+      document.getElementById('basket-list').innerHTML = basketComparison.map(item => {
+        const wFrom = Math.max(4, (item.fromINR / maxVal) * 100);
+        const wTo = Math.max(4, (item.toINR / maxVal) * 100);
+        const tagClass = item.ratio > 1.05 ? 'r-up' : 'r-down';
+        return `
+          <div class="basket-row">
+            <div class="basket-head">
+              <strong>${item.label}</strong>
+              <span class="ratio-tag ${tagClass}">${item.ratio}×</span>
+            </div>
+            <div class="dual-bars">
+              <div class="bar-line">
+                <span style="color:var(--muted);">${from.name}</span>
+                <div class="bar-track"><div class="bar-fill-from" style="width:${wFrom}%"></div></div>
+                <strong style="text-align:right;">${fmtINR(item.fromINR)}</strong>
+              </div>
+              <div class="bar-line">
+                <span style="color:var(--primary); font-weight:700;">${to.name}</span>
+                <div class="bar-track"><div class="bar-fill-to" style="width:${wTo}%"></div></div>
+                <strong style="text-align:right; color:var(--primary);">${fmtINR(item.toINR)}</strong>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      const winIsTo = offerShowdown.winnerCityId === to.id;
+      const winnerCity = winIsTo ? to : from;
+      const diffAbs = Math.abs(offerShowdown.monthlyGainINR);
+      const wb = document.getElementById('winner-box');
+      wb.className = `winner-box ${winIsTo ? 'w-ok' : 'w-warn'}`;
+      wb.innerHTML = `
+        <strong>${winnerCity.flag} ${winnerCity.name} Wins on Real Wealth!</strong>
+        <div style="font-size:0.83rem; margin-top:3px;">
+          ${offerShowdown.isCustomOffer ? 'With your entered job offer,' : `Using ${to.name}'s avg tech salary,`}
+          <strong>${winnerCity.name}</strong> lets you save <strong>${fmtINR(diffAbs)}/month more</strong> (${fmtINR(diffAbs * 60)} extra wealth over 5 years).
+        </div>`;
+
+      document.getElementById('compare-cards').innerHTML = `
+        <div class="cc-box ${!winIsTo ? 'is-winner' : ''}">
+          <h4>${from.flag} ${from.name}</h4>
+          <div class="kv-list">
+            <span>Gross / mo</span><strong>${fmtMoney(offerShowdown.fromGrossLocal, from.symbol, from.currency)}</strong>
+            <span>Tax (~${Math.round(from.effectiveTaxRate * 100)}%)</span><strong>${fmtMoney(offerShowdown.fromGrossLocal - offerShowdown.fromNetLocal, from.symbol, from.currency)}</strong>
+            <span>Living Basket</span><strong>${fmtMoney(summary.fromBasketTotal, from.symbol, from.currency)}</strong>
+            <span>Monthly Savings</span><strong style="color:${offerShowdown.fromSavingsINR >= 0 ? '#15803d' : '#dc2626'};">${fmtINR(offerShowdown.fromSavingsINR)}</strong>
+            <span>5-Yr Wealth</span><strong>${fmtINR(offerShowdown.fromFiveYearSavingsINR)}</strong>
+          </div>
+        </div>
+        <div class="cc-box ${winIsTo ? 'is-winner' : ''}">
+          <h4>${to.flag} ${to.name}</h4>
+          <div class="kv-list">
+            <span>${offerShowdown.isCustomOffer ? 'Offer / mo' : 'Avg Tech / mo'}</span><strong>${fmtMoney(offerShowdown.toGrossLocal, to.symbol, to.currency)}</strong>
+            <span>Tax (~${Math.round(to.effectiveTaxRate * 100)}%)</span><strong>${fmtMoney(offerShowdown.toGrossLocal - offerShowdown.toNetLocal, to.symbol, to.currency)}</strong>
+            <span>Living Basket</span><strong>${fmtMoney(summary.toBasketTotal, to.symbol, to.currency)}</strong>
+            <span>Monthly Savings</span><strong style="color:${offerShowdown.toSavingsINR >= 0 ? '#15803d' : '#dc2626'};">${fmtINR(offerShowdown.toSavingsINR)}</strong>
+            <span>5-Yr Wealth</span><strong>${fmtINR(offerShowdown.toFiveYearSavingsINR)}</strong>
+          </div>
+        </div>`;
+
+      document.getElementById('global-grid').innerHTML = globalOverview.map(c => `
+        <div class="city-tile ${c.id === to.id ? 'active' : ''}" onclick="selectTargetFromGrid('${c.id}')">
+          <div class="ct-top">
+            <span class="ct-name">${c.flag} ${c.name}</span>
+            <span class="ct-mult">${c.costMultiplier}×</span>
+          </div>
+          <div class="ct-req">${fmtMoney(c.requiredMonthlyLocal, c.symbol, c.currency)}/mo</div>
+          <div class="ct-inr">≈ ${fmtINR(c.requiredMonthlyINR)}/mo • Tax ${c.effectiveTaxPct}%</div>
+        </div>`).join('');
+    }
+
+    initApp();
+  </script>
+</body>
+</html>
