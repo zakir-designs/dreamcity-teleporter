@@ -20,6 +20,11 @@ const CITIES = {
     tagline: 'HITEC City Tech Hub',
     avgTechSalary: 55000,
     effectiveTaxRate: 0.08,
+    tierScale: {
+      student: { rent: 0.52, food: 0.75, transport: 0.8, utilities: 0.65, lifestyle: 0.55 },
+      standard: { rent: 1.0, food: 1.0, transport: 1.0, utilities: 1.0, lifestyle: 1.0 },
+      comfort: { rent: 1.65, food: 1.35, transport: 1.4, utilities: 1.35, lifestyle: 1.75 }
+    },
     basket: { rent: 16000, food: 9000, transport: 2500, utilities: 3000, lifestyle: 5500 }
   },
   bengaluru: {
@@ -32,6 +37,11 @@ const CITIES = {
     tagline: 'Silicon Valley of India',
     avgTechSalary: 75000,
     effectiveTaxRate: 0.12,
+    tierScale: {
+      student: { rent: 0.5, food: 0.76, transport: 0.82, utilities: 0.68, lifestyle: 0.58 },
+      standard: { rent: 1.0, food: 1.0, transport: 1.0, utilities: 1.0, lifestyle: 1.0 },
+      comfort: { rent: 1.7, food: 1.38, transport: 1.45, utilities: 1.35, lifestyle: 1.8 }
+    },
     basket: { rent: 24000, food: 11000, transport: 3500, utilities: 3500, lifestyle: 8000 }
   },
   mumbai: {
@@ -44,6 +54,11 @@ const CITIES = {
     tagline: 'Financial Capital of India',
     avgTechSalary: 80000,
     effectiveTaxRate: 0.12,
+    tierScale: {
+      student: { rent: 0.48, food: 0.78, transport: 0.75, utilities: 0.7, lifestyle: 0.6 },
+      standard: { rent: 1.0, food: 1.0, transport: 1.0, utilities: 1.0, lifestyle: 1.0 },
+      comfort: { rent: 1.75, food: 1.4, transport: 1.5, utilities: 1.4, lifestyle: 1.85 }
+    },
     basket: { rent: 34000, food: 12000, transport: 3000, utilities: 4000, lifestyle: 9000 }
   },
   dubai: {
@@ -56,6 +71,11 @@ const CITIES = {
     tagline: '0% Income Tax Global Hub',
     avgTechSalary: 15000,
     effectiveTaxRate: 0.0,
+    tierScale: {
+      student: { rent: 0.62, food: 0.78, transport: 0.82, utilities: 0.65, lifestyle: 0.65 },
+      standard: { rent: 1.0, food: 1.0, transport: 1.0, utilities: 1.0, lifestyle: 1.0 },
+      comfort: { rent: 1.95, food: 1.45, transport: 1.65, utilities: 1.45, lifestyle: 1.9 }
+    },
     basket: { rent: 5500, food: 1800, transport: 450, utilities: 750, lifestyle: 1500 }
   },
   singapore: {
@@ -68,6 +88,11 @@ const CITIES = {
     tagline: 'Asia Fintech Powerhouse',
     avgTechSalary: 6000,
     effectiveTaxRate: 0.07,
+    tierScale: {
+      student: { rent: 0.55, food: 0.76, transport: 0.85, utilities: 0.72, lifestyle: 0.62 },
+      standard: { rent: 1.0, food: 1.0, transport: 1.0, utilities: 1.0, lifestyle: 1.0 },
+      comfort: { rent: 1.85, food: 1.4, transport: 1.55, utilities: 1.38, lifestyle: 1.8 }
+    },
     basket: { rent: 2400, food: 800, transport: 150, utilities: 200, lifestyle: 550 }
   },
   london: {
@@ -80,6 +105,11 @@ const CITIES = {
     tagline: 'European Finance & AI Center',
     avgTechSalary: 4200,
     effectiveTaxRate: 0.24,
+    tierScale: {
+      student: { rent: 0.58, food: 0.78, transport: 0.84, utilities: 0.7, lifestyle: 0.64 },
+      standard: { rent: 1.0, food: 1.0, transport: 1.0, utilities: 1.0, lifestyle: 1.0 },
+      comfort: { rent: 1.8, food: 1.38, transport: 1.48, utilities: 1.35, lifestyle: 1.75 }
+    },
     basket: { rent: 1750, food: 450, transport: 180, utilities: 240, lifestyle: 380 }
   },
   berlin: {
@@ -92,6 +122,11 @@ const CITIES = {
     tagline: 'EU Startup Capital',
     avgTechSalary: 4600,
     effectiveTaxRate: 0.34,
+    tierScale: {
+      student: { rent: 0.56, food: 0.75, transport: 0.8, utilities: 0.68, lifestyle: 0.62 },
+      standard: { rent: 1.0, food: 1.0, transport: 1.0, utilities: 1.0, lifestyle: 1.0 },
+      comfort: { rent: 1.7, food: 1.35, transport: 1.4, utilities: 1.3, lifestyle: 1.7 }
+    },
     basket: { rent: 1250, food: 420, transport: 60, utilities: 260, lifestyle: 310 }
   },
   toronto: {
@@ -104,6 +139,11 @@ const CITIES = {
     tagline: 'North American Tech Corridor',
     avgTechSalary: 6500,
     effectiveTaxRate: 0.25,
+    tierScale: {
+      student: { rent: 0.57, food: 0.77, transport: 0.82, utilities: 0.7, lifestyle: 0.63 },
+      standard: { rent: 1.0, food: 1.0, transport: 1.0, utilities: 1.0, lifestyle: 1.0 },
+      comfort: { rent: 1.78, food: 1.36, transport: 1.45, utilities: 1.35, lifestyle: 1.75 }
+    },
     basket: { rent: 2150, food: 600, transport: 160, utilities: 210, lifestyle: 380 }
   },
   tokyo: {
@@ -116,6 +156,11 @@ const CITIES = {
     tagline: 'Robotics & Engineering Capital',
     avgTechSalary: 420000,
     effectiveTaxRate: 0.2,
+    tierScale: {
+      student: { rent: 0.54, food: 0.76, transport: 0.84, utilities: 0.68, lifestyle: 0.6 },
+      standard: { rent: 1.0, food: 1.0, transport: 1.0, utilities: 1.0, lifestyle: 1.0 },
+      comfort: { rent: 1.76, food: 1.38, transport: 1.45, utilities: 1.32, lifestyle: 1.78 }
+    },
     basket: { rent: 115000, food: 55000, transport: 15000, utilities: 20000, lifestyle: 35000 }
   },
   newyork: {
@@ -128,11 +173,14 @@ const CITIES = {
     tagline: 'Global Tech & Wall Street',
     avgTechSalary: 9500,
     effectiveTaxRate: 0.28,
+    tierScale: {
+      student: { rent: 0.58, food: 0.78, transport: 0.85, utilities: 0.7, lifestyle: 0.65 },
+      standard: { rent: 1.0, food: 1.0, transport: 1.0, utilities: 1.0, lifestyle: 1.0 },
+      comfort: { rent: 1.92, food: 1.45, transport: 1.55, utilities: 1.4, lifestyle: 1.88 }
+    },
     basket: { rent: 2900, food: 700, transport: 140, utilities: 220, lifestyle: 540 }
   }
 };
-
-const LIFESTYLE_MULT = { student: 0.72, standard: 1.0, comfort: 1.45 };
 
 const FALLBACK_RATES_USD = {
   USD: 1, INR: 85.0, AED: 3.6725, SGD: 1.34,
@@ -205,13 +253,23 @@ async function getLiveRates() {
   };
 }
 
-function sumBasket(basket, mult) {
-  return Object.values(basket).reduce((acc, v) => acc + v * mult, 0);
+function getCityScale(city, lifestyle) {
+  const tier = city.tierScale?.[lifestyle] || city.tierScale?.standard || {
+    rent: 1, food: 1, transport: 1, utilities: 1, lifestyle: 1
+  };
+  return {
+    rent: city.basket.rent * (tier.rent ?? 1),
+    food: city.basket.food * (tier.food ?? 1),
+    transport: city.basket.transport * (tier.transport ?? 1),
+    utilities: city.basket.utilities * (tier.utilities ?? 1),
+    lifestyle: city.basket.lifestyle * (tier.lifestyle ?? 1)
+  };
 }
 
-// ============================================================================
-// CLEAN FULL-PAGE VIEW (Shown when /api/rates or /api/cities is opened directly)
-// ============================================================================
+function sumScaledBasket(scaledBasket) {
+  return Object.values(scaledBasket).reduce((acc, v) => acc + v, 0);
+}
+
 function renderCleanPage({ endpoint, title, subtitle, sectionTitle, visualHtml }) {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -314,9 +372,6 @@ function renderCleanPage({ endpoint, title, subtitle, sectionTitle, visualHtml }
 </html>`;
 }
 
-// ============================================================================
-// REST API ENDPOINTS
-// ============================================================================
 app.get('/api/cities', (req, res) => {
   const payload = { count: Object.keys(CITIES).length, cities: Object.values(CITIES) };
   const wantsHtml = (req.headers.accept || '').includes('text/html') && req.query.raw !== '1';
@@ -407,8 +462,8 @@ app.post('/api/teleport', async (req, res) => {
       return res.status(400).json({ error: 'Invalid origin or destination city selected.' });
     }
 
+    const validLifestyle = ['student', 'standard', 'comfort'].includes(lifestyle) ? lifestyle : 'standard';
     const salary = Math.max(100, Number(monthlySalary) || from.avgTechSalary);
-    const mult = LIFESTYLE_MULT[lifestyle] || 1.0;
 
     const rateBundle = await getLiveRates();
     const rFrom = rateBundle.rates[from.currency] || FALLBACK_RATES_USD[from.currency];
@@ -416,8 +471,11 @@ app.post('/api/teleport', async (req, res) => {
     const rINR = rateBundle.rates.INR || FALLBACK_RATES_USD.INR;
 
     const marketRate = rTo / rFrom;
-    const fromBasketTotal = sumBasket(from.basket, mult);
-    const toBasketTotal = sumBasket(to.basket, mult);
+    const fromScaled = getCityScale(from, validLifestyle);
+    const toScaled = getCityScale(to, validLifestyle);
+
+    const fromBasketTotal = sumScaledBasket(fromScaled);
+    const toBasketTotal = sumScaledBasket(toScaled);
 
     const fromBasketUSD = fromBasketTotal / rFrom;
     const toBasketUSD = toBasketTotal / rTo;
@@ -439,8 +497,8 @@ app.post('/api/teleport', async (req, res) => {
     };
 
     const basketComparison = categories.map((key) => {
-      const fLocal = Math.round(from.basket[key] * mult);
-      const tLocal = Math.round(to.basket[key] * mult);
+      const fLocal = Math.round(fromScaled[key]);
+      const tLocal = Math.round(toScaled[key]);
       const fINR = Math.round((fLocal / rFrom) * rINR);
       const tINR = Math.round((tLocal / rTo) * rINR);
       const ratio = fINR > 0 ? tINR / fINR : 1;
@@ -461,7 +519,8 @@ app.post('/api/teleport', async (req, res) => {
 
     const globalOverview = Object.values(CITIES).map((city) => {
       const rCity = rateBundle.rates[city.currency] || FALLBACK_RATES_USD[city.currency];
-      const cBasket = sumBasket(city.basket, mult);
+      const cScaled = getCityScale(city, validLifestyle);
+      const cBasket = sumScaledBasket(cScaled);
       const cBasketUSD = cBasket / rCity;
       const multiplierVsFrom = cBasketUSD / fromBasketUSD;
       const neededLocal = salary * (cBasket / fromBasketTotal);
@@ -476,7 +535,7 @@ app.post('/api/teleport', async (req, res) => {
     });
 
     res.json({
-      meta: { source: rateBundle.source, updatedAt: rateBundle.updatedAt, isLive: rateBundle.isLive, lifestyle },
+      meta: { source: rateBundle.source, updatedAt: rateBundle.updatedAt, isLive: rateBundle.isLive, lifestyle: validLifestyle },
       from,
       to,
       exchange: {
