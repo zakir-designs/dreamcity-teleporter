@@ -319,15 +319,6 @@
     .ct-req { font-size: 1rem; font-weight: 800; font-variant-numeric: tabular-nums; }
     .ct-inr { font-size: 0.74rem; color: var(--muted); }
 
-    .mea-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
-    .mea-item { background: var(--surface-alt); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
-    .mea-item h4 { font-size: 0.9rem; color: #312e81; margin-bottom: 5px; }
-    .mea-item p { font-size: 0.81rem; color: var(--muted); }
-    .formula {
-      margin-top: 7px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.74rem; background: #fff; border: 1px dashed #cbd5e1; padding: 5px 8px; border-radius: 6px;
-    }
-
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px);
       display: none; align-items: center; justify-content: center; padding: 18px; z-index: 1000;
@@ -541,33 +532,6 @@
       <h2 class="section-title">Instant World Map — Click Any City to Teleport</h2>
       <p class="section-sub">Shows the exact monthly salary required in all 10 cities to maintain your exact current lifestyle.</p>
       <div class="global-grid" id="global-grid"></div>
-    </section>
-
-    <section class="card">
-      <h2 class="section-title">MEA (Managerial Economics) Concepts Powered by This Backend</h2>
-      <p class="section-sub">How this real-world lifestyle tool directly implements core syllabus economics.</p>
-      <div class="mea-grid">
-        <div class="mea-item">
-          <h4>1. Purchasing Power Parity (PPP)</h4>
-          <p>Exchange rates alone do not reflect real living standards. PPP compares what an identical basket of goods costs across two economies.</p>
-          <div class="formula">PPP Rate = Target Basket ÷ Origin Basket</div>
-        </div>
-        <div class="mea-item">
-          <h4>2. Real vs. Nominal Income</h4>
-          <p>A ₹60 LPA salary abroad sounds huge nominally, but after higher rent and 28% tax, real savings can sometimes be lower than ₹15 LPA in India.</p>
-          <div class="formula">Real Savings = Gross × (1 − Tax) − Basket</div>
-        </div>
-        <div class="mea-item">
-          <h4>3. Live Foreign Exchange Rate</h4>
-          <p>Our Node.js Express backend fetches live daily currency rates via REST API and caches them server-side so conversions stay accurate globally.</p>
-          <div class="formula">Nominal Value = Salary × (Rate_To / Rate_From)</div>
-        </div>
-        <div class="mea-item">
-          <h4>4. Opportunity Cost of Migration</h4>
-          <p>Compares 5-year accumulated wealth in INR across two cities so graduates weigh financial trade-offs rationally.</p>
-          <div class="formula">5-Yr Net Gain = 60 × (Savings_B − Savings_A)</div>
-        </div>
-      </div>
     </section>
   </main>
 
@@ -809,7 +773,7 @@
         `To match your <strong>${fmtMoney(summary.inputSalaryFromLocal, from.symbol, from.currency)}/mo</strong> lifestyle in ${from.name}, you need <strong>${fmtMoney(summary.requiredTargetAnnualLocal, to.symbol, to.currency)}/year</strong> in ${to.name} (${to.name} is ${comparePhrase} ${from.name}).`;
 
       document.getElementById('tb-note').innerHTML =
-        `<strong>${meta.lifestyle.toUpperCase()}</strong> monthly basket: <strong>${fmtINR(summary.fromBasketINR)}</strong> in ${from.name} vs. <strong>${fmtINR(summary.toBasketINR)}</strong> in ${to.name} (PPP ratio stays constant when both cities scale proportionally).`;
+        `<strong>${meta.lifestyle.toUpperCase()}</strong> monthly basket: <strong>${fmtINR(summary.fromBasketINR)}</strong> in ${from.name} vs. <strong>${fmtINR(summary.toBasketINR)}</strong> in ${to.name}.`;
 
       document.getElementById('st-mult').textContent = `${summary.costMultiplier}×`;
       document.getElementById('st-mult-sub').textContent = summary.costMultiplier >= 1 ? `${to.name} costs more` : `${to.name} costs less`;
