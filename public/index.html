@@ -569,13 +569,16 @@
       <div class="modal-head">
         <div>
           <h3>Live Global Exchange Rates</h3>
-          <p id="rates-modal-sub">Fetching live rates from backend...</p>
+          <p id="rates-modal-sub">Live Global ExchangeRate Open API</p>
         </div>
         <button class="modal-close" onclick="closeModal('modal-rates')" aria-label="Close">×</button>
       </div>
       <div class="modal-toolbar">
-        <span>Auto-updated daily via live central-bank exchange feed</span>
-        <a href="/api/rates" target="_blank" class="full-link">Open Full Page View ↗</a>
+        <span>Auto-updates daily at 5:30 AM IST (00:00 UTC)</span>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <button class="btn-share" onclick="openRatesModal(true)">↻ Refresh Now</button>
+          <a href="/api/rates" target="_blank" class="full-link">Open Full Page View ↗</a>
+        </div>
       </div>
       <div class="modal-body">
         <div id="rates-ui-view" class="rates-grid"></div>
@@ -607,7 +610,22 @@
     let currentTier = 'standard';
     let soundEnabled = true;
     let audioCtx = null;
+    let cachedRatesPayload = null;
     const teleportCache = new Map();
+
+    function fmtLocalTime(dateStr) {
+      const dt = new Date(dateStr);
+      if (Number.isNaN(dt.getTime())) return dateStr || '';
+      return dt.toLocaleString('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        weekday: 'short',
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
 
     function playTeleportSound() {
       if (!soundEnabled) return;
@@ -840,6 +858,7 @@
         const res = await fetch('/api/teleport', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          cache: 'no-store',
           body: JSON.stringify({ fromCity, toCity, monthlySalary, targetOfferSalary, lifestyle: currentTier })
         });
         const data = await res.json();
@@ -858,7 +877,8 @@
     function renderResults(d) {
       const { from, to, summary, exchange, offerShowdown, basketComparison, globalOverview, meta } = d;
 
-      document.getElementById('live-source-text').textContent = `${meta.source} • Updated ${meta.updatedAt.slice(0, 16)}`;
+      document.getElementById('live-source-text').textContent =
+        `${meta.source} • Synced ${fmtLocalTime(meta.checkedAt || meta.updatedAt)} IST`;
       document.getElementById('tb-eyebrow').textContent = `${from.name} → ${to.name} (${meta.lifestyle.toUpperCase()} LIFESTYLE)`;
       document.getElementById('tb-big').textContent = `${fmtMoney(summary.requiredTargetLocal, to.symbol, to.currency)} / month`;
 
@@ -965,41 +985,59 @@
         </div>`).join('');
     }
 
-    async function openRatesModal() {
+    async function openRatesModal(forceRefresh = false) {
       document.getElementById('modal-rates').classList.add('open');
       const grid = document.getElementById('rates-ui-view');
-      grid.innerHTML = '<p style="color:var(--muted);">Loading live central-bank exchange rates...</p>';
+      const sub = document.getElementById('rates-modal-sub');
+
+      if (!forceRefresh && cachedRatesPayload) {
+        renderRatesModal(cachedRatesPayload);
+        return;
+      }
+
+      if (!cachedRatesPayload) {
+        grid.innerHTML = '<p style="color:var(--muted);">Loading live rates...</p>';
+      } else {
+        sub.textContent = 'Refreshing live rates...';
+      }
 
       try {
-        const res = await fetch('/api/rates');
+        const res = await fetch(forceRefresh ? '/api/rates?fresh=1' : '/api/rates', { cache: 'no-store' });
         const payload = await res.json();
-        const { source, updatedAt, rates } = payload;
-        const inrPerUsd = rates.INR || 85;
-
-        document.getElementById('rates-modal-sub').textContent = `${source} • Updated ${updatedAt}`;
-
-        grid.innerHTML = Object.entries(rates).map(([code, perUsd]) => {
-          const info = CURRENCY_META[code] || { name: code, symbol: code + ' ' };
-          const inrValue = inrPerUsd / perUsd;
-          const mainLine = code === 'INR'
-            ? `₹${inrPerUsd.toFixed(2)} / $1`
-            : `1 ${code} = ₹${inrValue.toFixed(2)}`;
-          const subLine = code === 'USD'
-            ? 'Global Base Currency'
-            : `1 USD = ${perUsd.toFixed(4)} ${code}`;
-          return `
-            <div class="rate-card">
-              <div class="rate-top">
-                <span style="font-size:0.82rem; font-weight:700; color:var(--muted);">${info.name}</span>
-                <span class="cur-code">${code}</span>
-              </div>
-              <div class="rate-inr">${mainLine}</div>
-              <div class="rate-usd">${subLine}</div>
-            </div>`;
-        }).join('');
+        cachedRatesPayload = payload;
+        renderRatesModal(payload);
       } catch {
         grid.innerHTML = '<p style="color:#dc2626;">Could not load live rates from backend.</p>';
       }
+    }
+
+    function renderRatesModal(payload) {
+      const { source, updatedAt, checkedAt, rates } = payload;
+      const inrPerUsd = rates.INR || 85;
+      const grid = document.getElementById('rates-ui-view');
+
+      document.getElementById('rates-modal-sub').textContent =
+        `${source} • Feed: ${fmtLocalTime(updatedAt)} IST • Checked: ${fmtLocalTime(checkedAt || updatedAt)} IST`;
+
+      grid.innerHTML = Object.entries(rates).map(([code, perUsd]) => {
+        const info = CURRENCY_META[code] || { name: code, symbol: code + ' ' };
+        const inrValue = inrPerUsd / perUsd;
+        const mainLine = code === 'INR'
+          ? `₹${inrPerUsd.toFixed(2)} / $1`
+          : `1 ${code} = ₹${inrValue.toFixed(2)}`;
+        const subLine = code === 'USD'
+          ? 'Global Base Currency'
+          : `1 USD = ${perUsd.toFixed(4)} ${code}`;
+        return `
+          <div class="rate-card">
+            <div class="rate-top">
+              <span style="font-size:0.82rem; font-weight:700; color:var(--muted);">${info.name}</span>
+              <span class="cur-code">${code}</span>
+            </div>
+            <div class="rate-inr">${mainLine}</div>
+            <div class="rate-usd">${subLine}</div>
+          </div>`;
+      }).join('');
     }
 
     async function openCitiesModal() {
