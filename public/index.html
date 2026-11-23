@@ -489,7 +489,7 @@
       <div class="hero-top">
         <div class="live-pill">
           <span class="live-dot"></span>
-          <span id="live-source-text">Connecting to 1-Min Live Forex Backend...</span>
+          <span id="live-source-text">Connecting to Live Forex Backend...</span>
         </div>
         <div class="hero-links no-print">
           <button class="hero-btn" onclick="openRatesModal()">Live Exchange Rates</button>
@@ -505,11 +505,11 @@
             <h1>DreamCity Teleporter</h1>
           </div>
           <p class="hero-tagline">
-            Don't fall for big-salary illusions. Compare real Purchasing Power, taxes, and 5-year wealth across G20 nations, UAE, Singapore &amp; every Indian district—powered by 1-minute live forex.
+            Don't fall for big-salary illusions. Compare real Purchasing Power, taxes, and 5-year wealth across G20 nations, UAE, Singapore &amp; every Indian district—powered by live forex.
           </p>
           <div class="hero-badges">
             <span class="h-chip">21 Countries + All India Districts</span>
-            <span class="h-chip">1-Min Live Active Pair Forex</span>
+            <span class="h-chip">15-Min Smart Live Forex</span>
             <span class="h-chip">PPP &amp; Tax Adjusted</span>
             <span class="h-chip">5-Year Wealth Simulator</span>
           </div>
@@ -581,7 +581,7 @@
           <input type="number" id="in-salary" value="60000" min="100" step="500" />
         </div>
         <div class="action-pair">
-          <button class="btn-primary" id="btn-teleport" onclick="runTeleport(true, true)">Teleport Now →</button>
+          <button class="btn-primary" id="btn-teleport" onclick="runTeleport(true, false)">Teleport Now →</button>
           <button class="btn-sound on" id="btn-sound" onclick="toggleSound()" title="Toggle Teleport Sound">🔊 Sound On</button>
         </div>
       </div>
@@ -672,7 +672,7 @@
         <button class="modal-close" onclick="closeModal('modal-rates')" aria-label="Close">×</button>
       </div>
       <div class="modal-toolbar">
-        <span>Active Origin ↔ Target pair syncs every 1 minute via Twelve Data</span>
+        <span>Daily global feed auto-updates at 5:30 AM IST • Active pair cached 15 mins (0 idle credits)</span>
         <div style="display:flex; gap:12px; align-items:center;">
           <button class="btn-share" onclick="openRatesModal(true)">↻ Refresh Now</button>
           <a href="/api/rates" target="_blank" class="full-link">Open Full Page View ↗</a>
@@ -704,22 +704,21 @@
   </div>
 
   <script>
+    const CLIENT_CACHE_MS = 15 * 60 * 1000; // 15-minute client cache (0 credits for rapid clicks)
+
     let allCountries = [];
     let flagshipHubs = [];
     let currentTier = 'standard';
     let soundEnabled = true;
     let audioCtx = null;
     let cachedRatesPayload = null;
-    let lastTeleportResult = null;
 
     let liveStatusBaseText = '';
-    let nextSyncCountdown = 60;
-    let hasActiveForexPair = false;
     let clockTimerStarted = false;
 
     const statesCache = new Map();
     const districtsCache = new Map();
-    const teleportCache = new Map();
+    const teleportCache = new Map(); // key -> { data, savedAt }
 
     const CURRENCY_META = {
       USD: { name: 'US Dollar', symbol: '$' },
@@ -769,22 +768,15 @@
     function updateLiveStatusPill() {
       if (!liveStatusBaseText) return;
       const nowStr = fmtLocalTime(new Date());
-      const syncTag = hasActiveForexPair ? ` • Next sync ${nextSyncCountdown}s` : '';
       document.getElementById('live-source-text').textContent =
-        `${liveStatusBaseText} • ${nowStr} IST${syncTag}`;
+        `${liveStatusBaseText} • ${nowStr} IST`;
     }
 
+    // Live 1-second IST clock in browser (0 API credits while tab is open)
     function startLiveClock() {
       if (clockTimerStarted) return;
       clockTimerStarted = true;
       setInterval(() => {
-        if (hasActiveForexPair && !document.hidden) {
-          nextSyncCountdown -= 1;
-          if (nextSyncCountdown <= 0) {
-            nextSyncCountdown = 60;
-            runTeleport(false, true, true);
-          }
-        }
         updateLiveStatusPill();
       }, 1000);
     }
@@ -1116,7 +1108,7 @@
       }
     }
 
-    async function runTeleport(withSound = false, forceLiveTick = false, silentBg = false) {
+    async function runTeleport(withSound = false, forceLiveTick = false) {
       updateSalaryLabels();
       syncUrlParams();
       if (withSound) playTeleportSound();
@@ -1133,40 +1125,47 @@
       const offerRaw = document.getElementById('in-offer').value.trim();
       const targetOfferSalary = offerRaw ? parseFloat(offerRaw) : null;
 
-      const reqBody = {
+      const cacheKey = JSON.stringify({
         fromCountry, fromState, fromDistrict,
         toCountry, toState, toDistrict,
-        monthlySalary, targetOfferSalary,
-        lifestyle: currentTier,
-        forceLiveTick
-      };
+        monthlySalary, targetOfferSalary, lifestyle: currentTier
+      });
 
-      const cacheKey = JSON.stringify({ fromCountry, fromState, fromDistrict, toCountry, toState, toDistrict, monthlySalary, targetOfferSalary, lifestyle: currentTier });
-      if (!forceLiveTick && !silentBg && teleportCache.has(cacheKey)) {
-        renderResults(teleportCache.get(cacheKey));
+      // Zero-credit 15-minute browser cache for repeated clicks
+      const cachedEntry = teleportCache.get(cacheKey);
+      if (!forceLiveTick && cachedEntry && Date.now() - cachedEntry.savedAt < CLIENT_CACHE_MS) {
+        renderResults(cachedEntry.data);
+        return;
       }
 
       const btn = document.getElementById('btn-teleport');
-      if (!silentBg) btn.textContent = 'Calculating...';
+      btn.textContent = 'Calculating...';
 
       try {
         const res = await fetch('/api/teleport', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           cache: 'no-store',
-          body: JSON.stringify(reqBody)
+          body: JSON.stringify({
+            fromCountry, fromState, fromDistrict,
+            toCountry, toState, toDistrict,
+            monthlySalary, targetOfferSalary,
+            lifestyle: currentTier,
+            forceLiveTick: false
+          })
         });
         const data = await res.json();
-        if (data.error) { if (!silentBg) alert(data.error); return; }
-        teleportCache.set(cacheKey, data);
-        lastTeleportResult = data;
+        if (data.error) { alert(data.error); return; }
+        teleportCache.set(cacheKey, { data, savedAt: Date.now() });
         renderResults(data);
       } catch {
-        if (!silentBg && !teleportCache.has(cacheKey)) {
+        if (cachedEntry) {
+          renderResults(cachedEntry.data);
+        } else {
           alert('Could not reach backend API. Please refresh the page.');
         }
       } finally {
-        if (!silentBg) btn.textContent = 'Teleport Now →';
+        btn.textContent = 'Teleport Now →';
       }
     }
 
@@ -1175,8 +1174,6 @@
 
       const pairBadge = meta.activePair ? ` (${meta.activePair})` : '';
       liveStatusBaseText = `${meta.source}${pairBadge}`;
-      hasActiveForexPair = from.currency !== to.currency;
-      nextSyncCountdown = 60;
       updateLiveStatusPill();
       startLiveClock();
 
@@ -1331,7 +1328,7 @@
       const grid = document.getElementById('rates-ui-view');
 
       document.getElementById('rates-modal-sub').textContent =
-        `${source}${twelveDataEnabled ? ' + Twelve Data 1-Min Active Pair' : ''} • Checked: ${fmtLocalTime(checkedAt || updatedAt)} IST`;
+        `${source}${twelveDataEnabled ? ' + Twelve Data Live Pair (15-Min Cache)' : ''} • Checked: ${fmtLocalTime(checkedAt || updatedAt)} IST`;
 
       grid.innerHTML = Object.entries(rates).map(([code, perUsd]) => {
         const info = CURRENCY_META[code] || { name: code, symbol: code + ' ' };
