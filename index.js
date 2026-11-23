@@ -464,7 +464,6 @@ function getLocationAdjustment(countryCode, stateName, districtName) {
     };
   }
 
-  // Deterministic gentle regional variance (0.86 - 0.96) for non-capital states
   let hash = 0;
   for (let i = 0; i < stLower.length; i++) hash = (hash * 31 + stLower.charCodeAt(i)) % 11;
   const costMult = Number((0.86 + hash * 0.01).toFixed(2));
@@ -544,6 +543,7 @@ const FALLBACK_RATES_USD = {
 let cachedDailyRates = null;
 let lastDailyFetchMs = 0;
 const livePairCache = new Map(); // key: "FROM/TO" -> { rate, timestampIso, fetchedAtMs }
+const TWELVE_DATA_CACHE_MS = 15 * 60 * 1000; // 15-minute server cache
 
 async function getDailyRates(forceRefresh = false) {
   const now = Date.now();
@@ -620,7 +620,7 @@ async function getDailyRates(forceRefresh = false) {
   };
 }
 
-// On-Demand Active Pair Fetching via Twelve Data (1-Minute Live Cache, 1-2 credits max)
+// On-Demand Active Pair Fetching via Twelve Data (15-Minute Cache, 1 credit per refresh)
 async function fetchTwelveDataPair(baseCur, quoteCur, forceRefresh = false) {
   const apiKey = process.env.TWELVE_DATA_API_KEY;
   if (!apiKey || baseCur === quoteCur) return null;
@@ -628,7 +628,7 @@ async function fetchTwelveDataPair(baseCur, quoteCur, forceRefresh = false) {
   const pair = `${baseCur}/${quoteCur}`;
   const now = Date.now();
   const cached = livePairCache.get(pair);
-  if (!forceRefresh && cached && now - cached.fetchedAtMs < 60 * 1000) {
+  if (!forceRefresh && cached && now - cached.fetchedAtMs < TWELVE_DATA_CACHE_MS) {
     return cached;
   }
 
@@ -638,7 +638,7 @@ async function fetchTwelveDataPair(baseCur, quoteCur, forceRefresh = false) {
     const url = `https://api.twelvedata.com/exchange_rate?symbol=${encodeURIComponent(pair)}&apikey=${encodeURIComponent(apiKey)}`;
     const resp = await fetch(url, { signal: controller.signal, cache: 'no-store' });
     clearTimeout(t);
-    if (!resp.ok) return null;
+    if (!resp.ok) return cached || null;
     const data = await resp.json();
     const numericRate = Number(data?.rate);
     if (Number.isFinite(numericRate) && numericRate > 0) {
@@ -737,7 +737,7 @@ function renderCleanPage({ endpoint, title, subtitle, sectionTitle, visualHtml }
 </html>`;
 }
 
-// --- NEW CASCADING LOCATION ENDPOINTS ---
+// --- CASCADING LOCATION ENDPOINTS ---
 app.get('/api/locations/countries', (req, res) => {
   const countries = Object.values(COUNTRIES).map((c) => ({
     code: c.code,
@@ -851,7 +851,7 @@ app.get('/api/rates', async (req, res) => {
   res.type('html').send(renderCleanPage({
     endpoint: '/api/rates',
     title: 'Live Global Exchange Rates (19 Currencies)',
-    subtitle: `${payload.source}${payload.twelveDataEnabled ? ' + Twelve Data 1-Min Active Pair Live Feed' : ''}`,
+    subtitle: `${payload.source}${payload.twelveDataEnabled ? ' + Twelve Data Active Pair (15-Min Cache)' : ''}`,
     sectionTitle: 'G20 + UAE + Singapore Currency Rates (vs. INR & USD)',
     visualHtml: `<div class="grid">${cards}</div>`
   }));
@@ -917,7 +917,7 @@ app.post('/api/teleport', async (req, res) => {
     const rToBase = rateBundle.rates[to.currency] || FALLBACK_RATES_USD[to.currency];
     const rINRBase = rateBundle.rates.INR || FALLBACK_RATES_USD.INR;
 
-    // 2. Smart On-Demand Active Pair Fetching via Twelve Data (1-min live tick, max 1-2 credits)
+    // 2. Smart On-Demand Active Pair Fetching via Twelve Data (15-min cache)
     let marketRate = rToBase / rFromBase;
     let oneToInINR = rINRBase / rToBase;
     let oneFromInINR = rINRBase / rFromBase;
@@ -945,7 +945,7 @@ app.post('/api/teleport', async (req, res) => {
           marketRate = 1 / tick.rate;
           liveTickInfo = {
             active: true,
-            provider: 'Twelve Data 1-Min Live Forex',
+            provider: 'Twelve Data Live Forex (15-Min Cache)',
             pair: tick.pair,
             updatedAt: tick.timestampIso
           };
@@ -958,7 +958,7 @@ app.post('/api/teleport', async (req, res) => {
           marketRate = tick.rate;
           liveTickInfo = {
             active: true,
-            provider: 'Twelve Data 1-Min Live Forex',
+            provider: 'Twelve Data Live Forex (15-Min Cache)',
             pair: tick.pair,
             updatedAt: tick.timestampIso
           };
@@ -969,7 +969,7 @@ app.post('/api/teleport', async (req, res) => {
           marketRate = tick.rate;
           liveTickInfo = {
             active: true,
-            provider: 'Twelve Data 1-Min Live Forex',
+            provider: 'Twelve Data Live Forex (15-Min Cache)',
             pair: tick.pair,
             updatedAt: tick.timestampIso
           };
