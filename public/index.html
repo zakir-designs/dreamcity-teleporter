@@ -90,6 +90,11 @@
       background: #22c55e;
       box-shadow: 0 0 8px #22c55e;
       flex-shrink: 0;
+      animation: pulseDot 2s infinite;
+    }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.55; transform: scale(0.85); }
     }
     .hero-links { display: flex; flex-wrap: wrap; gap: 8px; }
     .hero-btn {
@@ -224,31 +229,85 @@
       border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); margin-bottom: 22px;
     }
 
-    .control-grid { display: grid; grid-template-columns: 1.1fr auto 1.1fr 1.1fr auto; gap: 12px; align-items: end; }
+    /* Cascading Location Selector Layout */
+    .loc-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .loc-panel {
+      background: var(--surface-alt);
+      border: 1.5px solid var(--border);
+      border-radius: 13px;
+      padding: 14px;
+    }
+    .loc-panel.target-panel {
+      border-color: #c7d2fe;
+      background: #f8faff;
+    }
+    .loc-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .loc-panel-title {
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--primary);
+    }
+    .loc-scope-tag {
+      font-size: 0.69rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+    .cascade-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 9px;
+    }
+
+    .action-bar {
+      display: grid;
+      grid-template-columns: 1.2fr auto;
+      gap: 12px;
+      align-items: end;
+    }
     .field label {
-      display: block; font-size: 0.74rem; font-weight: 700; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 5px; letter-spacing: 0.03em;
+      display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 4px; letter-spacing: 0.03em;
     }
     .field select, .field input {
-      width: 100%; padding: 11px 12px; border: 1.5px solid var(--border);
-      border-radius: 10px; font-size: 0.94rem; font-weight: 600; background: #fff; color: var(--ink); outline: none;
+      width: 100%; padding: 10px 11px; border: 1.5px solid var(--border);
+      border-radius: 10px; font-size: 0.9rem; font-weight: 600; background: #fff; color: var(--ink); outline: none;
     }
     .field select:focus, .field input:focus { border-color: var(--primary); }
+    .hidden { display: none !important; }
+
     .swap-btn {
-      height: 44px; width: 44px; border-radius: 10px; border: 1.5px solid var(--border);
-      background: var(--surface-alt); font-size: 1.15rem; cursor: pointer;
+      height: 44px; width: 44px; border-radius: 12px; border: 1.5px solid var(--border);
+      background: var(--surface); font-size: 1.15rem; cursor: pointer;
       display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
     }
     .swap-btn:hover { background: #eef2ff; border-color: #a5b4fc; transform: rotate(180deg); }
+
     .action-pair { display: flex; gap: 8px; align-items: center; }
     .btn-primary {
       background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
-      color: #fff; border: none; padding: 12px 16px; border-radius: 10px;
-      font-size: 0.92rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+      color: #fff; border: none; padding: 11px 18px; border-radius: 10px;
+      font-size: 0.92rem; font-weight: 700; cursor: pointer; white-space: nowrap; height: 42px;
     }
     .btn-primary:hover { opacity: 0.94; }
     .btn-sound {
-      height: 44px; padding: 0 12px; border-radius: 10px;
+      height: 42px; padding: 0 12px; border-radius: 10px;
       border: 1.5px solid var(--border); background: var(--surface-alt);
       color: var(--ink); font-size: 0.8rem; font-weight: 700; cursor: pointer;
       white-space: nowrap;
@@ -268,7 +327,7 @@
       font-size: 0.8rem; font-weight: 700; color: var(--muted); cursor: pointer;
     }
     .pill-btn.active { background: #fff; color: var(--primary); box-shadow: 0 1px 4px rgba(15, 23, 42, 0.1); }
-    .right-tools { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .right-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .offer-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 0.82rem; color: var(--muted); }
     .offer-inline input {
       width: 145px; padding: 7px 10px; border: 1.5px solid #c7d2fe;
@@ -305,7 +364,8 @@
     .r-up { background: var(--danger-bg); color: var(--danger-fg); }
     .r-down { background: var(--ok-bg); color: var(--ok-fg); }
     .dual-bars { display: flex; flex-direction: column; gap: 5px; }
-    .bar-line { display: grid; grid-template-columns: 76px 1fr 96px; align-items: center; gap: 8px; font-size: 0.76rem; }
+    .bar-line { display: grid; grid-template-columns: 92px 1fr 96px; align-items: center; gap: 8px; font-size: 0.76rem; }
+    .bar-line span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .bar-track { height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
     .bar-fill-from { height: 100%; background: #64748b; border-radius: 999px; transition: width 0.35s ease; }
     .bar-fill-to { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 999px; transition: width 0.35s ease; }
@@ -316,7 +376,7 @@
     .compare-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
     .cc-box { background: var(--surface-alt); border: 1.5px solid var(--border); border-radius: 12px; padding: 12px; }
     .cc-box.is-winner { border-color: #22c55e; background: #f0fdf4; }
-    .cc-box h4 { font-size: 0.9rem; margin-bottom: 8px; }
+    .cc-box h4 { font-size: 0.88rem; margin-bottom: 8px; }
     .kv-list { display: grid; grid-template-columns: 1fr auto; gap: 4px 6px; font-size: 0.79rem; }
     .kv-list span { color: var(--muted); }
     .kv-list strong { text-align: right; font-variant-numeric: tabular-nums; }
@@ -374,7 +434,7 @@
     .rate-card { background: var(--surface-alt); border: 1.5px solid var(--border); border-radius: 13px; padding: 14px; }
     .rate-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .cur-code { font-weight: 800; font-size: 0.95rem; background: #eef2ff; color: var(--primary); padding: 2px 8px; border-radius: 6px; }
-    .rate-inr { font-size: 1.22rem; font-weight: 900; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .rate-inr { font-size: 1.2rem; font-weight: 900; color: var(--ink); font-variant-numeric: tabular-nums; }
     .rate-usd { font-size: 0.77rem; color: var(--muted); margin-top: 3px; font-variant-numeric: tabular-nums; }
     .dir-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
     .dir-card { background: var(--surface-alt); border: 1.5px solid var(--border); border-radius: 13px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
@@ -409,14 +469,15 @@
       .hero-split { grid-template-columns: 1fr; }
       .stage-wrap { margin-top: 6px; }
       .glass-stage { max-width: 100%; height: 190px; }
-      .control-grid { grid-template-columns: 1fr 1fr; }
-      .swap-btn { display: none; }
-      .action-pair { grid-column: 1 / -1; }
+      .loc-grid { grid-template-columns: 1fr; }
+      .swap-btn { margin: 0 auto; transform: rotate(90deg); }
+      .action-bar { grid-template-columns: 1fr; }
+      .action-pair { width: 100%; }
       .btn-primary { flex: 1; }
       .teleport-banner, .split-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 560px) {
-      .control-grid, .compare-cards, .tb-stats { grid-template-columns: 1fr; }
+      .compare-cards, .tb-stats { grid-template-columns: 1fr; }
       .tb-big { font-size: 1.65rem; }
     }
   </style>
@@ -428,11 +489,11 @@
       <div class="hero-top">
         <div class="live-pill">
           <span class="live-dot"></span>
-          <span id="live-source-text">Connecting to Live Global Forex Backend...</span>
+          <span id="live-source-text">Connecting to 1-Min Live Forex Backend...</span>
         </div>
         <div class="hero-links no-print">
           <button class="hero-btn" onclick="openRatesModal()">Live Exchange Rates</button>
-          <button class="hero-btn" onclick="openCitiesModal()">Cities Database</button>
+          <button class="hero-btn" onclick="openCitiesModal()">Global Hubs</button>
           <button class="hero-btn" onclick="window.print()">Print Report</button>
         </div>
       </div>
@@ -444,11 +505,11 @@
             <h1>DreamCity Teleporter</h1>
           </div>
           <p class="hero-tagline">
-            Don't fall for big-salary illusions. Compare real Purchasing Power, taxes, and 5-year wealth across 10 global tech hubs—powered by live forex.
+            Don't fall for big-salary illusions. Compare real Purchasing Power, taxes, and 5-year wealth across G20 nations, UAE, Singapore &amp; every Indian district—powered by 1-minute live forex.
           </p>
           <div class="hero-badges">
-            <span class="h-chip">10 Global Tech Hubs</span>
-            <span class="h-chip">Live Central-Bank Forex</span>
+            <span class="h-chip">21 Countries + All India Districts</span>
+            <span class="h-chip">1-Min Live Active Pair Forex</span>
             <span class="h-chip">PPP &amp; Tax Adjusted</span>
             <span class="h-chip">5-Year Wealth Simulator</span>
           </div>
@@ -468,22 +529,62 @@
 
   <main class="container">
     <section class="card no-print">
-      <div class="control-grid">
-        <div class="field">
-          <label>Current / Origin City</label>
-          <select id="sel-from" onchange="onCityChange()"></select>
+      <div class="loc-grid">
+        <!-- ORIGIN LOCATION -->
+        <div class="loc-panel">
+          <div class="loc-panel-head">
+            <span class="loc-panel-title">Current / Origin Location</span>
+            <span class="loc-scope-tag" id="from-scope-tag">States + Districts</span>
+          </div>
+          <div class="cascade-row">
+            <div class="field">
+              <label for="from-country">Country</label>
+              <select id="from-country" onchange="onCountryChange('from')"></select>
+            </div>
+            <div class="field">
+              <label for="from-state">State / Province</label>
+              <select id="from-state" onchange="onStateChange('from')"></select>
+            </div>
+            <div class="field" id="from-district-wrap">
+              <label for="from-district">District (India)</label>
+              <select id="from-district" onchange="onDistrictChange('from')"></select>
+            </div>
+          </div>
         </div>
-        <button class="swap-btn" title="Swap Cities" onclick="swapCities()">⇄</button>
-        <div class="field">
-          <label>Dream / Target City</label>
-          <select id="sel-to" onchange="runTeleport(true)"></select>
+
+        <!-- SWAP BUTTON -->
+        <button class="swap-btn" title="Swap Origin & Target Locations" onclick="swapLocations()">⇄</button>
+
+        <!-- TARGET LOCATION -->
+        <div class="loc-panel target-panel">
+          <div class="loc-panel-head">
+            <span class="loc-panel-title">Dream / Target Location</span>
+            <span class="loc-scope-tag" id="to-scope-tag">States Only</span>
+          </div>
+          <div class="cascade-row">
+            <div class="field">
+              <label for="to-country">Country</label>
+              <select id="to-country" onchange="onCountryChange('to')"></select>
+            </div>
+            <div class="field">
+              <label for="to-state">State / Province</label>
+              <select id="to-state" onchange="onStateChange('to')"></select>
+            </div>
+            <div class="field hidden" id="to-district-wrap">
+              <label for="to-district">District (India)</label>
+              <select id="to-district" onchange="onDistrictChange('to')"></select>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="action-bar">
         <div class="field">
-          <label id="lbl-salary">Monthly Salary (₹)</label>
+          <label id="lbl-salary" for="in-salary">Monthly Salary (INR)</label>
           <input type="number" id="in-salary" value="60000" min="100" step="500" />
         </div>
         <div class="action-pair">
-          <button class="btn-primary" id="btn-teleport" onclick="runTeleport(true)">Teleport Now →</button>
+          <button class="btn-primary" id="btn-teleport" onclick="runTeleport(true, true)">Teleport Now →</button>
           <button class="btn-sound on" id="btn-sound" onclick="toggleSound()" title="Toggle Teleport Sound">🔊 Sound On</button>
         </div>
       </div>
@@ -500,7 +601,7 @@
         <div class="right-tools">
           <div class="offer-inline">
             <label for="in-offer"><strong id="lbl-offer">Test a Target Job Offer (Optional, /mo):</strong></label>
-            <input type="number" id="in-offer" placeholder="Uses city avg" min="0" onchange="runTeleport(false)" />
+            <input type="number" id="in-offer" placeholder="Uses location avg" min="0" onchange="runTeleport(false, false)" />
           </div>
           <button class="btn-share" id="btn-share" onclick="copyShareLink()">🔗 Copy Link</button>
         </div>
@@ -523,7 +624,7 @@
         <div class="mini-stat">
           <span>Live Market Rate</span>
           <strong id="st-rate">—</strong>
-          <small id="st-rate-sub">Central Bank Rate</small>
+          <small id="st-rate-sub">Active Pair Feed</small>
         </div>
         <div class="mini-stat">
           <span>Equivalent in INR</span>
@@ -552,14 +653,14 @@
         <div class="compare-cards" id="compare-cards"></div>
         <div class="breakeven-box" id="breakeven-box">Calculating break-even salary...</div>
         <div class="offer-tip" style="background:#f8fafc; border:1px solid var(--border); border-radius:10px; padding:11px 13px; font-size:0.8rem; color:#334155;">
-          <strong>Tip for Job Offers:</strong> Type any monthly job offer in the <em>"Test a Target Job Offer"</em> box above (e.g., <code>15000</code> AED in Dubai or <code>8500</code> USD in New York) to check whether moving abroad grows your net wealth.
+          <strong>Tip for Job Offers:</strong> Type any monthly job offer in the <em>"Test a Target Offer"</em> box above (e.g., <code>15000</code> AED in Dubai or <code>8500</code> USD in New York) to check whether relocating grows your net wealth.
         </div>
       </div>
     </section>
 
     <section class="card">
-      <h2 class="section-title">Instant World Map — Click Any City to Teleport</h2>
-      <p class="section-sub">Shows the exact monthly salary required in all 10 cities to maintain your exact current lifestyle.</p>
+      <h2 class="section-title">Instant World Map — Click Any Hub to Teleport</h2>
+      <p class="section-sub">Shows the exact monthly salary required in 10 flagship hubs to maintain your exact current lifestyle.</p>
       <div class="global-grid" id="global-grid"></div>
     </section>
   </main>
@@ -568,13 +669,13 @@
     <div class="modal-box">
       <div class="modal-head">
         <div>
-          <h3>Live Global Exchange Rates</h3>
-          <p id="rates-modal-sub">Live Global ExchangeRate Open API</p>
+          <h3>Live Global Exchange Rates (19 Currencies)</h3>
+          <p id="rates-modal-sub">G20 + UAE + Singapore Exchange Feed</p>
         </div>
         <button class="modal-close" onclick="closeModal('modal-rates')" aria-label="Close">×</button>
       </div>
       <div class="modal-toolbar">
-        <span>Auto-updates daily at 5:30 AM IST (00:00 UTC)</span>
+        <span>Active Origin ↔ Target pair syncs every 1 minute via Twelve Data</span>
         <div style="display:flex; gap:12px; align-items:center;">
           <button class="btn-share" onclick="openRatesModal(true)">↻ Refresh Now</button>
           <a href="/api/rates" target="_blank" class="full-link">Open Full Page View ↗</a>
@@ -590,14 +691,14 @@
     <div class="modal-box">
       <div class="modal-head">
         <div>
-          <h3>Global Tech Cities Database</h3>
-          <p id="cities-modal-sub">All 10 cities stored in your Node.js Express backend</p>
+          <h3>Global Tech Hubs Quick Directory</h3>
+          <p id="cities-modal-sub">10 Flagship Hubs + 21 Countries &amp; All Indian Districts</p>
         </div>
         <button class="modal-close" onclick="closeModal('modal-cities')" aria-label="Close">×</button>
       </div>
       <div class="modal-toolbar">
-        <span>Click any city button below to teleport immediately</span>
-        <a href="/api/cities" target="_blank" class="full-link">Open Full Table View ↗</a>
+        <span>Click any hub below to auto-fill Target Country, State &amp; District</span>
+        <a href="/api/cities" target="_blank" class="full-link">View All 21 Countries ↗</a>
       </div>
       <div class="modal-body">
         <div id="cities-ui-view" class="dir-grid"></div>
@@ -606,12 +707,47 @@
   </div>
 
   <script>
-    let allCities = [];
+    let allCountries = [];
+    let flagshipHubs = [];
     let currentTier = 'standard';
     let soundEnabled = true;
     let audioCtx = null;
     let cachedRatesPayload = null;
+    let lastTeleportResult = null;
+
+    const statesCache = new Map();
+    const districtsCache = new Map();
     const teleportCache = new Map();
+
+    const CURRENCY_META = {
+      USD: { name: 'US Dollar', symbol: '$' },
+      INR: { name: 'Indian Rupee', symbol: '₹' },
+      AED: { name: 'UAE Dirham', symbol: 'AED ' },
+      SGD: { name: 'Singapore Dollar', symbol: 'S$' },
+      GBP: { name: 'British Pound', symbol: '£' },
+      EUR: { name: 'Euro', symbol: '€' },
+      CAD: { name: 'Canadian Dollar', symbol: 'C$' },
+      AUD: { name: 'Australian Dollar', symbol: 'A$' },
+      JPY: { name: 'Japanese Yen', symbol: '¥' },
+      KRW: { name: 'South Korean Won', symbol: '₩' },
+      CNY: { name: 'Chinese Yuan', symbol: '¥' },
+      SAR: { name: 'Saudi Riyal', symbol: 'SAR ' },
+      BRL: { name: 'Brazilian Real', symbol: 'R$' },
+      MXN: { name: 'Mexican Peso', symbol: 'MX$' },
+      IDR: { name: 'Indonesian Rupiah', symbol: 'Rp ' },
+      ZAR: { name: 'South African Rand', symbol: 'R ' },
+      TRY: { name: 'Turkish Lira', symbol: '₺' },
+      ARS: { name: 'Argentine Peso', symbol: 'ARS ' },
+      RUB: { name: 'Russian Ruble', symbol: '₽' }
+    };
+
+    const HERO_SLIDES = [
+      { countryCode: 'AE', stateName: 'Dubai', districtName: '', city: 'Dubai', country: 'UAE', badge: '0% Income Tax', tagline: 'Tax-free salary advantage with global skyline living', avg: 'AED 15,000/mo', tax: '0% Tax' },
+      { countryCode: 'US', stateName: 'New York', districtName: '', city: 'New York', country: 'United States', badge: 'Top Tech Pay', tagline: 'High nominal tech salaries balanced against steep rent', avg: '$10,496/mo', tax: '25% Tax' },
+      { countryCode: 'JP', stateName: 'Tokyo', districtName: '', city: 'Tokyo', country: 'Japan', badge: 'Robotics Hub', tagline: 'Efficient transit and structured urban living costs', avg: '¥453,600/mo', tax: '20% Tax' },
+      { countryCode: 'GB', stateName: 'England', districtName: '', city: 'England (UK)', country: 'United Kingdom', badge: 'Finance & AI', tagline: 'Global career hub with higher housing & tax rates', avg: '£4,536/mo', tax: '24% Tax' },
+      { countryCode: 'IN', stateName: 'Karnataka', districtName: 'Bengaluru Urban', city: 'Bengaluru', country: 'India', badge: 'Startup Hub', tagline: 'Strong domestic tech growth with lower PPP cost', avg: '₹75,900/mo', tax: '9% Tax' }
+    ];
 
     function fmtLocalTime(dateStr) {
       const dt = new Date(dateStr);
@@ -623,9 +759,18 @@
         month: 'short',
         year: 'numeric',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
+        second: '2-digit'
       });
     }
+
+    function fmtMoney(amount, symbol, currency) {
+      const sign = amount < 0 ? '-' : '';
+      const absVal = Math.round(Math.abs(amount));
+      const locale = currency === 'INR' ? 'en-IN' : 'en-US';
+      return `${sign}${symbol}${absVal.toLocaleString(locale)}`;
+    }
+    function fmtINR(amount) { return fmtMoney(amount, '₹', 'INR'); }
 
     function playTeleportSound() {
       if (!soundEnabled) return;
@@ -656,16 +801,8 @@
       if (soundEnabled) playTeleportSound();
     }
 
-    const HERO_SLIDES = [
-      { id: 'dubai', city: 'Dubai', country: 'UAE', badge: '0% Income Tax', tagline: 'Tax-free salary advantage with global skyline living', avg: 'AED 15,000/mo', tax: '0% Tax' },
-      { id: 'newyork', city: 'New York', country: 'USA', badge: 'Top Tech Pay', tagline: 'High nominal tech salaries balanced against steep rent', avg: '$9,500/mo', tax: '28% Tax' },
-      { id: 'tokyo', city: 'Tokyo', country: 'Japan', badge: 'Robotics Hub', tagline: 'Efficient transit and structured urban living costs', avg: '¥420,000/mo', tax: '20% Tax' },
-      { id: 'london', city: 'London', country: 'UK', badge: 'Finance & AI', tagline: 'Global career hub with higher housing & tax rates', avg: '£4,200/mo', tax: '24% Tax' },
-      { id: 'bengaluru', city: 'Bengaluru', country: 'India', badge: 'Startup Hub', tagline: 'Strong domestic tech growth with lower PPP cost', avg: '₹75,000/mo', tax: '12% Tax' }
-    ];
-
+    // --- 3D FLOATING GLASS SLIDESHOW ---
     let activeSlideIdx = 0;
-    let slideTimer = null;
     let slidePaused = false;
 
     function renderSlideshow() {
@@ -681,7 +818,7 @@
         else if (offset === 2) posClass = 'pos-2';
 
         return `
-          <div class="slide-card ${posClass}" onclick="selectTargetFromGrid('${s.id}')">
+          <div class="slide-card ${posClass}" onclick="teleportToPreset('${s.countryCode}', '${s.stateName.replace(/'/g, "\\'")}', '${s.districtName.replace(/'/g, "\\'")}')">
             <div>
               <div class="sc-top">
                 <div class="sc-city">${s.city}</div>
@@ -712,38 +849,182 @@
 
     function startSlideshowLoop() {
       renderSlideshow();
-      slideTimer = setInterval(() => { if (!slidePaused) nextSlide(); }, 3400);
+      setInterval(() => { if (!slidePaused) nextSlide(); }, 3400);
     }
 
-    const CURRENCY_META = {
-      USD: { name: 'US Dollar', symbol: '$' },
-      INR: { name: 'Indian Rupee', symbol: '₹' },
-      AED: { name: 'UAE Dirham', symbol: 'AED ' },
-      SGD: { name: 'Singapore Dollar', symbol: 'S$' },
-      GBP: { name: 'British Pound', symbol: '£' },
-      EUR: { name: 'Euro', symbol: '€' },
-      CAD: { name: 'Canadian Dollar', symbol: 'C$' },
-      JPY: { name: 'Japanese Yen', symbol: '¥' }
-    };
-
-    function fmtMoney(amount, symbol, currency) {
-      const sign = amount < 0 ? '-' : '';
-      const absVal = Math.round(Math.abs(amount));
-      const locale = currency === 'INR' ? 'en-IN' : 'en-US';
-      return `${sign}${symbol}${absVal.toLocaleString(locale)}`;
+    // --- CASCADING DATA HELPERS ---
+    function getCountryObj(code) {
+      return allCountries.find(c => c.code === code) || allCountries[0];
     }
-    function fmtINR(amount) { return fmtMoney(amount, '₹', 'INR'); }
+
+    function selectMatchingOption(selectEl, targetValue) {
+      if (!targetValue || !selectEl.options.length) return;
+      const needle = String(targetValue).trim().toLowerCase();
+      for (const opt of selectEl.options) {
+        if (opt.value.toLowerCase() === needle || opt.text.toLowerCase() === needle) {
+          selectEl.value = opt.value;
+          return;
+        }
+      }
+      for (const opt of selectEl.options) {
+        if (opt.text.toLowerCase().includes(needle) || needle.includes(opt.text.toLowerCase())) {
+          selectEl.value = opt.value;
+          return;
+        }
+      }
+    }
+
+    async function fetchStates(countryCode) {
+      if (statesCache.has(countryCode)) return statesCache.get(countryCode);
+      const res = await fetch(`/api/locations/states?country=${encodeURIComponent(countryCode)}`);
+      const data = await res.json();
+      const states = data.states || [];
+      statesCache.set(countryCode, states);
+      return states;
+    }
+
+    async function fetchDistricts(stateCode) {
+      if (districtsCache.has(stateCode)) return districtsCache.get(stateCode);
+      const res = await fetch(`/api/locations/districts?state=${encodeURIComponent(stateCode)}`);
+      const data = await res.json();
+      const districts = data.districts || [];
+      districtsCache.set(stateCode, districts);
+      return districts;
+    }
+
+    async function populateSide(side, { countryCode, stateVal = '', districtVal = '' }) {
+      const selCountry = document.getElementById(`${side}-country`);
+      const selState = document.getElementById(`${side}-state`);
+      const selDistrict = document.getElementById(`${side}-district`);
+      const distWrap = document.getElementById(`${side}-district-wrap`);
+      const scopeTag = document.getElementById(`${side}-scope-tag`);
+
+      if (countryCode) selCountry.value = countryCode;
+      const activeCountry = selCountry.value;
+      const isIndia = activeCountry === 'IN';
+
+      scopeTag.textContent = isIndia ? 'States + Districts' : 'States Only';
+
+      selState.innerHTML = '<option value="">Loading states...</option>';
+      const states = await fetchStates(activeCountry);
+      selState.innerHTML = states.map(s => `<option value="${s.code}">${s.name}</option>`).join('');
+      if (stateVal) selectMatchingOption(selState, stateVal);
+
+      if (isIndia) {
+        distWrap.classList.remove('hidden');
+        selDistrict.innerHTML = '<option value="">Loading districts...</option>';
+        const districts = await fetchDistricts(selState.value);
+        selDistrict.innerHTML = districts.map(d => `<option value="${d}">${d}</option>`).join('');
+        if (districtVal) selectMatchingOption(selDistrict, districtVal);
+      } else {
+        distWrap.classList.add('hidden');
+        selDistrict.innerHTML = '';
+      }
+    }
+
+    async function onCountryChange(side) {
+      const countryCode = document.getElementById(`${side}-country`).value;
+      const countryObj = getCountryObj(countryCode);
+
+      if (side === 'from' && countryObj) {
+        document.getElementById('in-salary').value = countryObj.avgTechSalary;
+      }
+      if (side === 'to') {
+        document.getElementById('in-offer').value = '';
+      }
+
+      const defaultState = countryCode === 'IN' ? 'Telangana' : countryCode === 'AE' ? 'Dubai' : countryCode === 'US' ? 'New York' : '';
+      const defaultDist = countryCode === 'IN' ? 'Hyderabad' : '';
+
+      await populateSide(side, { countryCode, stateVal: defaultState, districtVal: defaultDist });
+      updateSalaryLabels();
+      runTeleport(true, false);
+    }
+
+    async function onStateChange(side) {
+      const countryCode = document.getElementById(`${side}-country`).value;
+      if (countryCode === 'IN') {
+        const stateCode = document.getElementById(`${side}-state`).value;
+        const selDistrict = document.getElementById(`${side}-district`);
+        selDistrict.innerHTML = '<option value="">Loading districts...</option>';
+        const districts = await fetchDistricts(stateCode);
+        selDistrict.innerHTML = districts.map(d => `<option value="${d}">${d}</option>`).join('');
+      }
+      if (side === 'to') document.getElementById('in-offer').value = '';
+      updateSalaryLabels();
+      runTeleport(true, false);
+    }
+
+    function onDistrictChange(side) {
+      if (side === 'to') document.getElementById('in-offer').value = '';
+      updateSalaryLabels();
+      runTeleport(true, false);
+    }
+
+    async function swapLocations() {
+      const fromSnap = {
+        countryCode: document.getElementById('from-country').value,
+        stateVal: document.getElementById('from-state').value,
+        districtVal: document.getElementById('from-district').value
+      };
+      const toSnap = {
+        countryCode: document.getElementById('to-country').value,
+        stateVal: document.getElementById('to-state').value,
+        districtVal: document.getElementById('to-district').value
+      };
+
+      await Promise.all([
+        populateSide('from', toSnap),
+        populateSide('to', fromSnap)
+      ]);
+
+      const newFromCountry = getCountryObj(toSnap.countryCode);
+      if (newFromCountry) document.getElementById('in-salary').value = newFromCountry.avgTechSalary;
+      document.getElementById('in-offer').value = '';
+
+      updateSalaryLabels();
+      runTeleport(true, false);
+    }
+
+    async function teleportToPreset(countryCode, stateName, districtName) {
+      await populateSide('to', { countryCode, stateVal: stateName, districtVal: districtName });
+      document.getElementById('in-offer').value = '';
+      updateSalaryLabels();
+      closeModal('modal-cities');
+      runTeleport(true, false);
+      window.scrollTo({ top: 180, behavior: 'smooth' });
+    }
+
+    function updateSalaryLabels() {
+      const fromC = getCountryObj(document.getElementById('from-country').value);
+      const toC = getCountryObj(document.getElementById('to-country').value);
+      if (fromC) document.getElementById('lbl-salary').textContent = `Monthly Salary (${fromC.currency})`;
+      if (toC) {
+        const toSelState = document.getElementById('to-state');
+        const toSelDist = document.getElementById('to-district');
+        const targetLabel = (toC.code === 'IN' && toSelDist.value)
+          ? toSelDist.value
+          : (toSelState.options[toSelState.selectedIndex]?.text || toC.name);
+        document.getElementById('lbl-offer').textContent = `Test a ${targetLabel} Offer (${toC.currency}/mo):`;
+        document.getElementById('in-offer').placeholder = `Avg: ${toC.avgTechSalary.toLocaleString()}`;
+      }
+    }
 
     function syncUrlParams() {
-      const fromCity = document.getElementById('sel-from').value;
-      const toCity = document.getElementById('sel-to').value;
-      const salary = document.getElementById('in-salary').value;
-      const offer = document.getElementById('in-offer').value.trim();
       const params = new URLSearchParams();
-      if (fromCity) params.set('from', fromCity);
-      if (toCity) params.set('to', toCity);
-      if (salary) params.set('salary', salary);
-      if (currentTier) params.set('tier', currentTier);
+      params.set('fc', document.getElementById('from-country').value);
+      params.set('fs', document.getElementById('from-state').value);
+      if (document.getElementById('from-country').value === 'IN') {
+        params.set('fd', document.getElementById('from-district').value);
+      }
+      params.set('tc', document.getElementById('to-country').value);
+      params.set('ts', document.getElementById('to-state').value);
+      if (document.getElementById('to-country').value === 'IN') {
+        params.set('td', document.getElementById('to-district').value);
+      }
+      params.set('salary', document.getElementById('in-salary').value);
+      params.set('tier', currentTier);
+      const offer = document.getElementById('in-offer').value.trim();
       if (offer) params.set('offer', offer);
       window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
     }
@@ -756,28 +1037,49 @@
       setTimeout(() => { btn.textContent = '🔗 Copy Link'; }, 1600);
     }
 
+    function setTier(tier) {
+      currentTier = tier;
+      document.querySelectorAll('.sub-controls .pill-btn').forEach(b => b.classList.toggle('active', b.dataset.tier === tier));
+      runTeleport(true, false);
+    }
+
     async function initApp() {
       startSlideshowLoop();
       try {
-        const res = await fetch('/api/cities');
+        const res = await fetch('/api/locations/countries');
         const data = await res.json();
-        allCities = data.cities || [];
-        const selFrom = document.getElementById('sel-from');
-        const selTo = document.getElementById('sel-to');
-        const opts = allCities.map(c => `<option value="${c.id}">${c.name}, ${c.country} (${c.currency})</option>`).join('');
-        selFrom.innerHTML = opts;
-        selTo.innerHTML = opts;
+        allCountries = data.countries || [];
+
+        const countryOpts = allCountries
+          .map(c => `<option value="${c.code}">${c.flag} ${c.name} (${c.currency})</option>`)
+          .join('');
+        document.getElementById('from-country').innerHTML = countryOpts;
+        document.getElementById('to-country').innerHTML = countryOpts;
 
         const q = new URLSearchParams(window.location.search);
-        const qFrom = q.get('from');
-        const qTo = q.get('to');
-        const qTier = q.get('tier');
+        const fc = allCountries.some(c => c.code === q.get('fc')) ? q.get('fc') : 'IN';
+        const fs = q.get('fs') || (fc === 'IN' ? 'Telangana' : '');
+        const fd = q.get('fd') || (fc === 'IN' ? 'Hyderabad' : '');
+
+        const tc = allCountries.some(c => c.code === q.get('tc')) ? q.get('tc') : 'AE';
+        const ts = q.get('ts') || (tc === 'AE' ? 'Dubai' : '');
+        const td = q.get('td') || '';
+
         const qSalary = q.get('salary');
         const qOffer = q.get('offer');
+        const qTier = q.get('tier');
 
-        selFrom.value = allCities.some(c => c.id === qFrom) ? qFrom : 'hyderabad';
-        selTo.value = allCities.some(c => c.id === qTo) ? qTo : 'dubai';
-        if (qSalary && Number(qSalary) >= 100) document.getElementById('in-salary').value = Number(qSalary);
+        await Promise.all([
+          populateSide('from', { countryCode: fc, stateVal: fs, districtVal: fd }),
+          populateSide('to', { countryCode: tc, stateVal: ts, districtVal: td })
+        ]);
+
+        if (qSalary && Number(qSalary) >= 100) {
+          document.getElementById('in-salary').value = Number(qSalary);
+        } else {
+          const defFrom = getCountryObj(fc);
+          if (defFrom) document.getElementById('in-salary').value = fc === 'IN' ? 60000 : defFrom.avgTechSalary;
+        }
         if (qOffer) document.getElementById('in-offer').value = qOffer;
         if (['student', 'standard', 'comfort'].includes(qTier)) {
           currentTier = qTier;
@@ -785,102 +1087,84 @@
         }
 
         updateSalaryLabels();
-        await runTeleport(false);
+        await runTeleport(false, false);
+
+        // 1-Minute Auto-Sync while tab is open (Smart On-Demand Active Pair)
+        setInterval(() => {
+          if (!document.hidden && lastTeleportResult && lastTeleportResult.from.currency !== lastTeleportResult.to.currency) {
+            runTeleport(false, false, true);
+          }
+        }, 62000);
       } catch {
         document.getElementById('live-source-text').textContent = 'Backend API unreachable — check deployment';
       }
     }
 
-    function getCity(id) { return allCities.find(c => c.id === id); }
-
-    function updateSalaryLabels() {
-      const from = getCity(document.getElementById('sel-from').value);
-      const to = getCity(document.getElementById('sel-to').value);
-      if (from) document.getElementById('lbl-salary').textContent = `Monthly Salary (${from.currency})`;
-      if (to) {
-        document.getElementById('lbl-offer').textContent = `Test a ${to.name} Offer (${to.currency}/mo):`;
-        document.getElementById('in-offer').placeholder = `Avg: ${to.avgTechSalary.toLocaleString()}`;
-      }
-    }
-
-    function onCityChange() {
-      const from = getCity(document.getElementById('sel-from').value);
-      if (from) document.getElementById('in-salary').value = from.avgTechSalary;
-      document.getElementById('in-offer').value = '';
-      updateSalaryLabels();
-      runTeleport(true);
-    }
-
-    function swapCities() {
-      const selFrom = document.getElementById('sel-from');
-      const selTo = document.getElementById('sel-to');
-      const tmp = selFrom.value;
-      selFrom.value = selTo.value;
-      selTo.value = tmp;
-      onCityChange();
-    }
-
-    function setTier(tier) {
-      currentTier = tier;
-      document.querySelectorAll('.sub-controls .pill-btn').forEach(b => b.classList.toggle('active', b.dataset.tier === tier));
-      runTeleport(true);
-    }
-
-    function selectTargetFromGrid(cityId) {
-      document.getElementById('sel-to').value = cityId;
-      document.getElementById('in-offer').value = '';
-      updateSalaryLabels();
-      runTeleport(true);
-      closeModal('modal-cities');
-      window.scrollTo({ top: 180, behavior: 'smooth' });
-    }
-
-    async function runTeleport(withSound = false) {
+    async function runTeleport(withSound = false, forceLiveTick = false, silentBg = false) {
       updateSalaryLabels();
       syncUrlParams();
       if (withSound) playTeleportSound();
 
-      const fromCity = document.getElementById('sel-from').value;
-      const toCity = document.getElementById('sel-to').value;
+      const fromCountry = document.getElementById('from-country').value;
+      const fromState = document.getElementById('from-state').value;
+      const fromDistrict = fromCountry === 'IN' ? document.getElementById('from-district').value : '';
+
+      const toCountry = document.getElementById('to-country').value;
+      const toState = document.getElementById('to-state').value;
+      const toDistrict = toCountry === 'IN' ? document.getElementById('to-district').value : '';
+
       const monthlySalary = parseFloat(document.getElementById('in-salary').value) || 50000;
       const offerRaw = document.getElementById('in-offer').value.trim();
       const targetOfferSalary = offerRaw ? parseFloat(offerRaw) : null;
 
-      const cacheKey = JSON.stringify({ fromCity, toCity, monthlySalary, targetOfferSalary, lifestyle: currentTier });
-      if (teleportCache.has(cacheKey)) {
+      const reqBody = {
+        fromCountry, fromState, fromDistrict,
+        toCountry, toState, toDistrict,
+        monthlySalary, targetOfferSalary,
+        lifestyle: currentTier,
+        forceLiveTick
+      };
+
+      const cacheKey = JSON.stringify({ fromCountry, fromState, fromDistrict, toCountry, toState, toDistrict, monthlySalary, targetOfferSalary, lifestyle: currentTier });
+      if (!forceLiveTick && !silentBg && teleportCache.has(cacheKey)) {
         renderResults(teleportCache.get(cacheKey));
       }
 
       const btn = document.getElementById('btn-teleport');
-      btn.textContent = 'Calculating...';
+      if (!silentBg) btn.textContent = 'Calculating...';
 
       try {
         const res = await fetch('/api/teleport', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           cache: 'no-store',
-          body: JSON.stringify({ fromCity, toCity, monthlySalary, targetOfferSalary, lifestyle: currentTier })
+          body: JSON.stringify(reqBody)
         });
         const data = await res.json();
-        if (data.error) { alert(data.error); return; }
+        if (data.error) { if (!silentBg) alert(data.error); return; }
         teleportCache.set(cacheKey, data);
+        lastTeleportResult = data;
         renderResults(data);
       } catch {
-        if (!teleportCache.has(cacheKey)) {
+        if (!silentBg && !teleportCache.has(cacheKey)) {
           alert('Could not reach backend API. Please refresh the page.');
         }
       } finally {
-        btn.textContent = 'Teleport Now →';
+        if (!silentBg) btn.textContent = 'Teleport Now →';
       }
     }
 
     function renderResults(d) {
       const { from, to, summary, exchange, offerShowdown, basketComparison, globalOverview, meta } = d;
 
+      const pairBadge = meta.activePair ? ` (${meta.activePair})` : '';
       document.getElementById('live-source-text').textContent =
-        `${meta.source} • Synced ${fmtLocalTime(meta.checkedAt || meta.updatedAt)} IST`;
-      document.getElementById('tb-eyebrow').textContent = `${from.name} → ${to.name} (${meta.lifestyle.toUpperCase()} LIFESTYLE)`;
-      document.getElementById('tb-big').textContent = `${fmtMoney(summary.requiredTargetLocal, to.symbol, to.currency)} / month`;
+        `${meta.source}${pairBadge} • Synced ${fmtLocalTime(meta.checkedAt || meta.updatedAt)} IST`;
+
+      document.getElementById('tb-eyebrow').textContent =
+        `${from.fullLabel} → ${to.fullLabel} (${meta.lifestyle.toUpperCase()})`;
+      document.getElementById('tb-big').textContent =
+        `${fmtMoney(summary.requiredTargetLocal, to.symbol, to.currency)} / month`;
 
       const comparePhrase =
         summary.costMultiplier > 1.02
@@ -898,7 +1182,11 @@
       document.getElementById('st-mult').textContent = `${summary.costMultiplier}×`;
       document.getElementById('st-mult-sub').textContent = summary.costMultiplier >= 1 ? `${to.name} costs more` : `${to.name} costs less`;
       document.getElementById('st-rate').textContent =
-        to.currency === 'INR' ? `1 ${from.currency} = ₹${exchange.oneFromInINR}` : `1 ${to.currency} = ₹${exchange.oneToInINR}`;
+        from.currency === to.currency
+          ? `1 ${from.currency} = 1 ${to.currency}`
+          : to.currency === 'INR'
+            ? `1 ${from.currency} = ₹${exchange.oneFromInINR}`
+            : `1 ${to.currency} = ₹${exchange.oneToInINR}`;
       document.getElementById('st-rate-sub').textContent = `1 ${from.currency} = ${exchange.marketRate} ${to.currency}`;
       document.getElementById('st-inr').textContent = `${fmtINR(summary.requiredTargetINR)}/mo`;
       document.getElementById('st-lpa').textContent = `≈ ₹${summary.requiredTargetAnnualLPA} LPA equivalent`;
@@ -917,12 +1205,12 @@
             </div>
             <div class="dual-bars">
               <div class="bar-line">
-                <span style="color:var(--muted);">${from.name}</span>
+                <span style="color:var(--muted);" title="${from.fullLabel}">${from.name}</span>
                 <div class="bar-track"><div class="bar-fill-from" style="width:${wFrom}%"></div></div>
                 <strong style="text-align:right;">${fmtINR(item.fromINR)}</strong>
               </div>
               <div class="bar-line">
-                <span style="color:var(--primary); font-weight:700;">${to.name}</span>
+                <span style="color:var(--primary); font-weight:700;" title="${to.fullLabel}">${to.name}</span>
                 <div class="bar-track"><div class="bar-fill-to" style="width:${wTo}%"></div></div>
                 <strong style="text-align:right; color:var(--primary);">${fmtINR(item.toINR)}</strong>
               </div>
@@ -931,15 +1219,15 @@
       }).join('');
 
       const winIsTo = offerShowdown.winnerCityId === to.id;
-      const winnerCity = winIsTo ? to : from;
+      const winnerLoc = winIsTo ? to : from;
       const diffAbs = Math.abs(offerShowdown.monthlyGainINR);
       const wb = document.getElementById('winner-box');
       wb.className = `winner-box ${winIsTo ? 'w-ok' : 'w-warn'}`;
       wb.innerHTML = `
-        <strong>${winnerCity.name} Wins on Real Wealth!</strong>
+        <strong>${winnerLoc.name} Wins on Real Wealth!</strong>
         <div style="font-size:0.83rem; margin-top:3px;">
           ${offerShowdown.isCustomOffer ? 'With your entered job offer,' : `Using ${to.name}'s avg tech salary,`}
-          <strong>${winnerCity.name}</strong> lets you save <strong>${fmtINR(diffAbs)}/month more</strong> (${fmtINR(diffAbs * 60)} extra wealth over 5 years).
+          <strong>${winnerLoc.name}</strong> lets you save <strong>${fmtINR(diffAbs)}/month more</strong> (${fmtINR(diffAbs * 60)} extra wealth over 5 years).
         </div>`;
 
       document.getElementById('compare-cards').innerHTML = `
@@ -964,8 +1252,10 @@
           </div>
         </div>`;
 
+      // Accurate Break-Even Salary Calculation in Target Currency
       const toTaxFactor = Math.max(0.1, 1 - to.effectiveTaxRate);
-      const breakEvenLocal = (offerShowdown.fromSavingsLocal / exchange.marketRate + summary.toBasketTotal) / toTaxFactor;
+      const fromSavingsInTargetLocal = offerShowdown.fromSavingsLocal * exchange.marketRate;
+      const breakEvenLocal = Math.max(0, (fromSavingsInTargetLocal + summary.toBasketTotal) / toTaxFactor);
       const gapToBreakEven = offerShowdown.toGrossLocal - breakEvenLocal;
       const gapText = gapToBreakEven >= 0
         ? `Current tested pay is <strong>${fmtMoney(gapToBreakEven, to.symbol, to.currency)}/mo above</strong> break-even.`
@@ -974,15 +1264,21 @@
       document.getElementById('breakeven-box').innerHTML =
         `<strong>Break-Even Salary in ${to.name}:</strong> Need at least <strong>${fmtMoney(breakEvenLocal, to.symbol, to.currency)}/mo</strong> to match ${from.name}'s savings. ${gapText}`;
 
-      document.getElementById('global-grid').innerHTML = globalOverview.map(c => `
-        <div class="city-tile ${c.id === to.id ? 'active' : ''}" onclick="selectTargetFromGrid('${c.id}')">
-          <div class="ct-top">
-            <span class="ct-name">${c.name}</span>
-            <span class="ct-mult">${c.costMultiplier}×</span>
-          </div>
-          <div class="ct-req">${fmtMoney(c.requiredMonthlyLocal, c.symbol, c.currency)}/mo</div>
-          <div class="ct-inr">≈ ${fmtINR(c.requiredMonthlyINR)}/mo • Tax ${c.effectiveTaxPct}%</div>
-        </div>`).join('');
+      document.getElementById('global-grid').innerHTML = globalOverview.map(c => {
+        const isCurrentTarget =
+          c.countryCode === to.countryCode &&
+          c.stateName.toLowerCase() === to.stateName.toLowerCase() &&
+          (!c.districtName || c.districtName.toLowerCase() === to.districtName.toLowerCase());
+        return `
+          <div class="city-tile ${isCurrentTarget ? 'active' : ''}" onclick="teleportToPreset('${c.countryCode}', '${c.stateName.replace(/'/g, "\\'")}', '${(c.districtName || '').replace(/'/g, "\\'")}')">
+            <div class="ct-top">
+              <span class="ct-name">${c.flag} ${c.name}</span>
+              <span class="ct-mult">${c.costMultiplier}×</span>
+            </div>
+            <div class="ct-req">${fmtMoney(c.requiredMonthlyLocal, c.symbol, c.currency)}/mo</div>
+            <div class="ct-inr">≈ ${fmtINR(c.requiredMonthlyINR)}/mo • Tax ${c.effectiveTaxPct}%</div>
+          </div>`;
+      }).join('');
     }
 
     async function openRatesModal(forceRefresh = false) {
@@ -1012,12 +1308,12 @@
     }
 
     function renderRatesModal(payload) {
-      const { source, updatedAt, checkedAt, rates } = payload;
-      const inrPerUsd = rates.INR || 85;
+      const { source, updatedAt, checkedAt, rates, twelveDataEnabled } = payload;
+      const inrPerUsd = rates.INR || 86;
       const grid = document.getElementById('rates-ui-view');
 
       document.getElementById('rates-modal-sub').textContent =
-        `${source} • Feed: ${fmtLocalTime(updatedAt)} IST • Checked: ${fmtLocalTime(checkedAt || updatedAt)} IST`;
+        `${source}${twelveDataEnabled ? ' + Twelve Data 1-Min Active Pair' : ''} • Checked: ${fmtLocalTime(checkedAt || updatedAt)} IST`;
 
       grid.innerHTML = Object.entries(rates).map(([code, perUsd]) => {
         const info = CURRENCY_META[code] || { name: code, symbol: code + ' ' };
@@ -1044,24 +1340,24 @@
       document.getElementById('modal-cities').classList.add('open');
       const grid = document.getElementById('cities-ui-view');
 
-      if (!allCities.length) {
-        grid.innerHTML = '<p style="color:var(--muted);">Loading cities from backend...</p>';
+      if (!flagshipHubs.length) {
+        grid.innerHTML = '<p style="color:var(--muted);">Loading global hubs...</p>';
         const res = await fetch('/api/cities');
         const payload = await res.json();
-        allCities = payload.cities || [];
+        flagshipHubs = payload.cities || [];
       }
 
       document.getElementById('cities-modal-sub').textContent =
-        `${allCities.length} Global Tech Cities • Live Express Backend Dataset`;
+        `${flagshipHubs.length} Flagship Tech Hubs • 21 Countries & All Indian Districts Supported`;
 
-      grid.innerHTML = allCities.map(c => {
+      grid.innerHTML = flagshipHubs.map(c => {
         const b = c.basket;
         const total = b.rent + b.food + b.transport + b.utilities + b.lifestyle;
         return `
           <div class="dir-card">
             <div class="dir-head">
               <div>
-                <h4>${c.name}, ${c.country}</h4>
+                <h4>${c.flag} ${c.name}, ${c.country}</h4>
                 <small>${c.tagline} (${c.currency})</small>
               </div>
               <span class="tax-pill">Tax ${Math.round(c.effectiveTaxRate * 100)}%</span>
@@ -1074,7 +1370,7 @@
               <span>Lifestyle</span><strong>${fmtMoney(b.lifestyle, c.symbol, c.currency)}</strong>
               <span style="color:var(--ink); font-weight:700;">Total Monthly Basket</span><strong style="color:var(--primary);">${fmtMoney(total, c.symbol, c.currency)}</strong>
             </div>
-            <button class="dir-btn" onclick="selectTargetFromGrid('${c.id}')">Teleport to ${c.name} →</button>
+            <button class="dir-btn" onclick="teleportToPreset('${c.countryCode}', '${c.stateName.replace(/'/g, "\\'")}', '${(c.districtName || '').replace(/'/g, "\\'")}')">Teleport to ${c.name} →</button>
           </div>`;
       }).join('');
     }
